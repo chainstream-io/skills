@@ -1,0 +1,9 @@
+{
+  "name": "chainstream",
+  "version": "1.0.0",
+  "description": "On-chain data intelligence and DeFi execution for AI agents",
+  "author": { "name": "chainstream-io", "url": "https://chainstream.io" },
+  "repository": "https://github.com/chainstream-io/skills",
+  "license": "MIT",
+  "keywords": ["crypto", "blockchain", "defi", "token", "wallet", "swap", "mcp", "x402"]
+}

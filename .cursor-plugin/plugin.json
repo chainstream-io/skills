@@ -1,0 +1,15 @@
+{
+  "name": "chainstream",
+  "displayName": "ChainStream",
+  "description": "On-chain data intelligence and DeFi execution for AI agents — token analytics, market discovery, wallet profiling, swap, bridge, launchpad across Solana, BSC, Ethereum",
+  "version": "1.0.0",
+  "author": {
+    "name": "chainstream-io",
+    "url": "https://chainstream.io"
+  },
+  "homepage": "https://chainstream.io",
+  "repository": "https://github.com/chainstream-io/skills",
+  "license": "MIT",
+  "keywords": ["crypto", "blockchain", "defi", "token", "wallet", "swap", "mcp", "onchain", "solana", "x402"],
+  "skills": "./"
+}
