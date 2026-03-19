@@ -22,7 +22,7 @@ Internally check before the first request (do not output to user):
 Three auth modes exist; CLI handles automatically:
 - **Turnkey Wallet** (recommended): `npx @chainstream-io/cli login` → Turnkey TEE, wallet signature headers
 - **API Key**: `npx @chainstream-io/cli config set --key apiKey --value <key>` → `X-API-KEY` header
-- **x402 Wallet**: Purchase quota with USDC when receiving 402
+- **x402 Wallet**: CLI auto-purchases quota with USDC on 402 (uses EIP-3009, cannot be done with manual curl)
 
 For auth details, see [shared/authentication.md](../shared/authentication.md).
 

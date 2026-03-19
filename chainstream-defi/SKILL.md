@@ -138,7 +138,7 @@ For the full resolution table, see [references/currency-resolution.md](reference
 | Slippage exceeded | Price moved | Re-quote with higher slippage, confirm again |
 | Insufficient balance | Not enough funds | Show balance, suggest amount |
 | Job timeout | No confirmation in 60s | Show pending status + tx hash for manual check |
-| 402 | No quota | See [shared/x402-payment.md](../shared/x402-payment.md) |
+| 402 | No quota | CLI auto-handles via x402 (do NOT manually curl). See [shared/x402-payment.md](../shared/x402-payment.md) |
 
 ## Rules
 
