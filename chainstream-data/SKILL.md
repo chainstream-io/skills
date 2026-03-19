@@ -11,31 +11,46 @@ On-chain data intelligence for AI agents. Access token analytics, market trends,
 - **MCP Server**: `https://mcp.chainstream.io/mcp` (streamable-http)
 - **Base URL**: `https://api.chainstream.io`
 
-## Auth Preflight
+## Integration Path (check FIRST)
 
-Internally check before the first request (do not output to user):
+**Before doing anything, determine which path to use:**
 
-1. CLI available and authenticated? → Use CLI commands directly
-2. Agent has its own wallet? → Use SDK with `WalletSigner` interface
-3. API Key available? → SDK or CLI with API Key (read-only)
-4. Nothing configured? → Guide to `npx @chainstream-io/cli login`
+1. **Agent already has a wallet** (AgentKit, Privy, MPC, any `signMessage` capable wallet)?
+   → **Use SDK** (`@chainstream-io/sdk`). Do NOT use CLI. Implement `WalletSigner` interface with your wallet. See [shared/authentication.md](../shared/authentication.md) for code examples.
 
-Two integration paths:
-- **CLI** (no existing wallet): `npx @chainstream-io/cli login` → creates wallet, handles auth + x402 automatically
-- **SDK** (agent has own wallet): `new ChainStreamClient("", { walletSigner: myWallet })` → implement `WalletSigner` interface
-- **API Key** (dashboard users): `npx @chainstream-io/cli config set --key apiKey --value <key>` → read-only
+2. **Agent does NOT have a wallet?**
+   → **Use CLI** (`npx @chainstream-io/cli`). CLI creates a Turnkey wallet and handles auth + x402 payment automatically.
 
-x402 payment is transparent: CLI auto-handles via `@x402/fetch`; SDK users wrap with `@x402/fetch`. Never construct payment headers manually.
+3. **Human user with API key from dashboard?**
+   → **Use CLI with API Key**: `npx @chainstream-io/cli config set --key apiKey --value <key>` (read-only, no DeFi)
 
-For full auth guide with code examples, see [shared/authentication.md](../shared/authentication.md).
+x402 payment is transparent in both paths. Never construct payment headers manually — use `@x402/fetch` (SDK path) or CLI (CLI path).
 
-## Prerequisites
+## Prerequisites (CLI path)
+
+Only needed if using CLI path (no existing wallet):
 
 - CLI available: `npx @chainstream-io/cli --version`
-- Authenticated via one of:
-  - `npx @chainstream-io/cli login` (Turnkey wallet, recommended)
-  - `npx @chainstream-io/cli config set --key apiKey --value <key>` (API key)
-- Config stored in `~/.config/chainstream/config.json` (managed by CLI, no manual editing)
+- Authenticated: `npx @chainstream-io/cli login` or `npx @chainstream-io/cli config set --key apiKey --value <key>`
+
+## Prerequisites (SDK path)
+
+Only needed if agent has its own wallet:
+
+```bash
+npm install @chainstream-io/sdk @x402/core @x402/fetch @x402/evm viem
+```
+
+```typescript
+import { ChainStreamClient, type WalletSigner } from "@chainstream-io/sdk";
+
+const wallet: WalletSigner = {
+  chain: "evm",
+  address: "0xYourAgentWallet",
+  signMessage: async (msg) => yourWallet.personalSign(msg),
+};
+const client = new ChainStreamClient("", { walletSigner: wallet });
+```
 
 ## Endpoint Selector
 

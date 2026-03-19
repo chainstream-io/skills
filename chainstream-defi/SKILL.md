@@ -18,23 +18,20 @@ Execute DeFi operations: token swap, cross-chain bridge, launchpad creation, and
 - The AI agent must **NEVER auto-execute** — explicit user confirmation is required every time.
 - Only use with funds the user is willing to trade.
 
-## Auth Preflight
+## Integration Path (check FIRST)
 
 DeFi operations **require a wallet**. API Key alone is insufficient.
 
-1. CLI with wallet configured? → Use CLI commands
-2. Agent has its own wallet? → Use SDK with `WalletSigner` interface (must support `signTypedData` for x402)
-3. Only API Key? → Tell user: "DeFi requires a wallet. Run `npx @chainstream-io/cli login` or use SDK with your own wallet."
+1. **Agent already has a wallet?**
+   → **Use SDK** (`@chainstream-io/sdk`). Do NOT use CLI. Implement `WalletSigner` interface. Your wallet must also support `signTypedData` for x402 payment.
+
+2. **Agent does NOT have a wallet?**
+   → **Use CLI** (`npx @chainstream-io/cli`). CLI creates a Turnkey wallet, handles signing + x402 automatically.
+
+3. **Only API Key?**
+   → Cannot execute DeFi operations. Tell user: "DeFi requires a wallet. Use SDK with your wallet or run `npx @chainstream-io/cli login`."
 
 For full auth guide with code examples, see [shared/authentication.md](../shared/authentication.md).
-
-## Prerequisites
-
-- CLI available: `npx @chainstream-io/cli --version`
-- **Wallet required** (API Key alone is insufficient for DeFi):
-  - `npx @chainstream-io/cli login` (Turnkey wallet, recommended)
-  - `npx @chainstream-io/cli wallet set-raw --chain evm` (raw key, dev only)
-- Config stored in `~/.config/chainstream/config.json` (managed by CLI)
 
 ## Endpoint Selector
 
