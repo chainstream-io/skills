@@ -21,7 +21,20 @@ The CLI internally uses `@x402/fetch` to:
 3. Retry with `Payment-Signature` header
 4. Return the API response — agent never sees the 402
 
-### Method 2: @x402/fetch (programmatic)
+### Method 2: Standard x402 GET (any x402-compatible wallet)
+
+The purchase endpoint uses standard GET — compatible with awal, @x402/fetch, and any x402 client:
+
+```bash
+# awal (Coinbase Agent Wallet)
+npx awal x402 pay "https://api.chainstream.io/x402/purchase?plan=nano"
+
+# Any x402-compatible tool
+GET https://api.chainstream.io/x402/purchase?plan=nano
+# → 402 + Payment-Required header → client signs → retries with Payment-Signature → 200
+```
+
+### Method 3: @x402/fetch (programmatic)
 
 For agents that need programmatic access without CLI:
 
@@ -36,12 +49,8 @@ const client = new x402Client();
 client.register("eip155:*", new ExactEvmScheme(account));
 const x402Fetch = wrapFetchWithPayment(fetch, client);
 
-// Transparent: 402 → sign → retry → success
-const resp = await x402Fetch("https://api.chainstream.io/x402/purchase", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ plan: "nano" }),
-});
+// Standard GET — transparent: 402 → sign → retry → success
+const resp = await x402Fetch("https://api.chainstream.io/x402/purchase?plan=nano");
 ```
 
 Required packages: `@x402/core`, `@x402/fetch`, `@x402/evm`, `viem`

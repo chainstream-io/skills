@@ -60,12 +60,8 @@ const x402 = new x402Client();
 x402.register("eip155:*", new ExactEvmScheme(yourViemAccount));
 const x402Fetch = wrapFetchWithPayment(fetch, x402);
 
-// Use x402Fetch for the purchase endpoint
-const resp = await x402Fetch("https://api.chainstream.io/x402/purchase", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ plan: "nano" }),
-});
+// Standard GET — x402Fetch handles 402 → sign → retry transparently
+const resp = await x402Fetch("https://api.chainstream.io/x402/purchase?plan=nano");
 ```
 
 Required packages: `@chainstream-io/sdk`, `@x402/core`, `@x402/fetch`, `@x402/evm`, `viem`
