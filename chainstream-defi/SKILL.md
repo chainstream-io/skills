@@ -20,13 +20,13 @@ Execute DeFi operations: token swap, cross-chain bridge, launchpad creation, and
 
 ## Auth Preflight
 
-DeFi operations **require a wallet** (Turnkey or raw key). API Key alone is insufficient.
+DeFi operations **require a wallet**. API Key alone is insufficient.
 
-1. Wallet configured? (`npx @chainstream-io/cli config auth` shows Turnkey or Raw Key) → proceed
-2. Only API Key? → Tell user: "DeFi operations require a wallet. Run `npx @chainstream-io/cli login` to create one."
-3. Neither? → Tell user: "Run `npx @chainstream-io/cli login` to get started."
+1. CLI with wallet configured? → Use CLI commands
+2. Agent has its own wallet? → Use SDK with `WalletSigner` interface (must support `signTypedData` for x402)
+3. Only API Key? → Tell user: "DeFi requires a wallet. Run `npx @chainstream-io/cli login` or use SDK with your own wallet."
 
-For auth setup, see [shared/authentication.md](../shared/authentication.md).
+For full auth guide with code examples, see [shared/authentication.md](../shared/authentication.md).
 
 ## Prerequisites
 

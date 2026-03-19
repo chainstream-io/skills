@@ -15,16 +15,19 @@ On-chain data intelligence for AI agents. Access token analytics, market trends,
 
 Internally check before the first request (do not output to user):
 
-1. Is CLI authenticated? (`npx @chainstream-io/cli config auth` returns active session) → proceed
-2. Is `CHAINSTREAM_API_KEY` configured? → API Key mode, proceed
-3. Neither? → Tell user to run `npx @chainstream-io/cli login` or `npx @chainstream-io/cli config set --key apiKey --value <key>`
+1. CLI available and authenticated? → Use CLI commands directly
+2. Agent has its own wallet? → Use SDK with `WalletSigner` interface
+3. API Key available? → SDK or CLI with API Key (read-only)
+4. Nothing configured? → Guide to `npx @chainstream-io/cli login`
 
-Three auth modes exist; CLI handles automatically:
-- **Turnkey Wallet** (recommended): `npx @chainstream-io/cli login` → Turnkey TEE, wallet signature headers
-- **API Key**: `npx @chainstream-io/cli config set --key apiKey --value <key>` → `X-API-KEY` header
-- **x402 Wallet**: CLI auto-purchases quota with USDC on 402 (uses EIP-3009, cannot be done with manual curl)
+Two integration paths:
+- **CLI** (no existing wallet): `npx @chainstream-io/cli login` → creates wallet, handles auth + x402 automatically
+- **SDK** (agent has own wallet): `new ChainStreamClient("", { walletSigner: myWallet })` → implement `WalletSigner` interface
+- **API Key** (dashboard users): `npx @chainstream-io/cli config set --key apiKey --value <key>` → read-only
 
-For auth details, see [shared/authentication.md](../shared/authentication.md).
+x402 payment is transparent: CLI auto-handles via `@x402/fetch`; SDK users wrap with `@x402/fetch`. Never construct payment headers manually.
+
+For full auth guide with code examples, see [shared/authentication.md](../shared/authentication.md).
 
 ## Prerequisites
 
