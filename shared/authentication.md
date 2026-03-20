@@ -76,28 +76,41 @@ npx @chainstream-io/cli config set --key apiKey --value <key>
 
 Get a key at [app.chainstream.io](https://app.chainstream.io).
 
-## Wallet Signature Headers
+## SIWX Authentication (Standard)
 
-All wallet-based requests include these headers (SDK/CLI adds them automatically):
+All wallet-based requests use SIWX (Sign-In-With-X) authentication. SDK/CLI handles this automatically.
+
+**How it works**: Sign a SIWE/SIWS message once → get a token valid for 1 hour → include in every request.
 
 ```
-X-Wallet-Address: <wallet address>
-X-Wallet-Chain: evm | solana
-X-Wallet-Signature: <signature of "chainstream:{chain}:{address}:{timestamp}:{nonce}">
-X-Wallet-Timestamp: <unix seconds>
-X-Wallet-Nonce: <unique per request>
+Authorization: SIWX <base64(message)>.<signature>
 ```
 
-Signature message format: `chainstream:{chain}:{address}:{timestamp}:{nonce}`
-- EVM: `personal_sign` (EIP-191)
-- Solana: `signMessage` (ed25519)
+The message follows EIP-4361 (SIWE for EVM, SIWS for Solana) format:
+```
+api.chainstream.io wants you to sign in with your Ethereum account:
+0xYourAddress
+
+Sign in to ChainStream API
+
+URI: https://api.chainstream.io
+Version: 1
+Chain ID: 8453
+Nonce: <random>
+Issued At: <ISO 8601>
+Expiration Time: <ISO 8601, default 1h>
+```
+
+Signing method: `personal_sign` (EIP-191 for EVM, ed25519 for Solana).
+
+SDK/CLI automatically caches the token and refreshes before expiry. Agent never needs to manage token lifecycle.
 
 ## Auth Priority
 
-Server checks in order: Wallet Signature → API Key → JWT Bearer.
+Server checks in order: SIWX → API Key → JWT Bearer.
 
 ## NEVER Do
 
-- NEVER construct `X-Wallet-*` headers manually with curl — use SDK or CLI
+- NEVER construct SIWX tokens manually — use SDK or CLI
 - NEVER construct x402 `Payment-Signature` manually — use `@x402/fetch` or CLI
 - NEVER expose wallet private keys in logs, command arguments, or chat messages
