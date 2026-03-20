@@ -4,7 +4,7 @@
 
 - Git
 - Node.js >= 18
-- ChainStream API Key or Turnkey wallet
+- ChainStream CLI (`npx @chainstream-io/cli`)
 
 ## Installation
 
@@ -17,9 +17,9 @@ ln -s ~/.codex/chainstream ~/.agents/skills/chainstream
 ## Configure
 
 ```bash
-npx @chainstream-io/cli login         # Create Turnkey wallet (recommended)
+npx @chainstream-io/cli login         # Create wallet (no email required)
 # or
-npx @chainstream-io/cli config set --key apiKey --value <your_key>  # API key only
+npx @chainstream-io/cli config set --key apiKey --value <your_key>  # API key only (read-only)
 ```
 
 ## Verify

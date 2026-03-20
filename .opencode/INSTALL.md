@@ -16,9 +16,9 @@ ln -s ~/.opencode/chainstream ~/.agents/skills/chainstream
 ## Configure
 
 ```bash
-npx @chainstream-io/cli login         # Create Turnkey wallet (recommended)
+npx @chainstream-io/cli login         # Create wallet (no email required)
 # or
-npx @chainstream-io/cli config set --key apiKey --value <your_key>
+npx @chainstream-io/cli config set --key apiKey --value <your_key>  # API key only (read-only)
 ```
 
 ## Verify

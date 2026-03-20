@@ -23,15 +23,11 @@ The CLI internally uses `@x402/fetch` to:
 
 ### Method 2: Standard x402 GET (any x402-compatible wallet)
 
-The purchase endpoint uses standard GET — compatible with awal, @x402/fetch, and any x402 client:
+The purchase endpoint follows the x402 standard — compatible with any x402-compliant client:
 
-```bash
-# awal (Coinbase Agent Wallet)
-npx awal x402 pay "https://api.chainstream.io/x402/purchase?plan=nano"
-
-# Any x402-compatible tool
+```
 GET https://api.chainstream.io/x402/purchase?plan=nano
-# → 402 + Payment-Required header → client signs → retries with Payment-Signature → 200
+→ 402 + Payment-Required header → client signs → retries with Payment-Signature → 200
 ```
 
 ### Method 3: @x402/fetch (programmatic)
@@ -42,18 +38,23 @@ For agents that need programmatic access without CLI:
 import { x402Client } from "@x402/core/client";
 import { wrapFetchWithPayment } from "@x402/fetch";
 import { ExactEvmScheme } from "@x402/evm/exact/client";
-import { privateKeyToAccount } from "viem/accounts";
+import { ExactSvmScheme } from "@x402/svm/exact/client";
 
-const account = privateKeyToAccount("0x...");
 const client = new x402Client();
-client.register("eip155:*", new ExactEvmScheme(account));
+
+// Base (EVM) — register with viem account
+client.register("eip155:8453", new ExactEvmScheme(viemAccount));
+
+// OR Solana — register with @solana/kit signer
+client.register("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", new ExactSvmScheme(solanaSigner));
+
 const x402Fetch = wrapFetchWithPayment(fetch, client);
 
 // Standard GET — transparent: 402 → sign → retry → success
 const resp = await x402Fetch("https://api.chainstream.io/x402/purchase?plan=nano");
 ```
 
-Required packages: `@x402/core`, `@x402/fetch`, `@x402/evm`, `viem`
+Required packages: `@x402/core`, `@x402/fetch`, `@x402/evm` (for Base), `@x402/svm` (for Solana)
 
 ### Why manual curl does NOT work
 
@@ -77,8 +78,10 @@ None of this can be done with `curl` or basic `signMessage`.
 
 ## Supported Payment Networks
 
-- **EVM**: Base mainnet — USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`)
+- **Base**: Base mainnet — USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`)
 - **Solana**: Solana mainnet — USDC (`EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`)
+
+CLI auto-payment supports both Base and Solana. The default payment chain is Base; set `walletChain: "sol"` in config to use Solana.
 
 ## Error Recovery
 

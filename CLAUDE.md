@@ -19,7 +19,7 @@ Alternative: MCP tools at `https://mcp.chainstream.io/mcp` (streamable-http)
 
 ## Auth
 
-CLI handles auth automatically. Run `chainstream login` for Turnkey wallet or `chainstream config set --key apiKey --value <key>` for API key.
+CLI handles auth automatically. Run `chainstream login` to create a wallet (no email required). x402 payment is transparent — CLI auto-purchases quota on 402. For API-key-only access: `chainstream config set --key apiKey --value <key>`.
 
 ## Hard Rules
 

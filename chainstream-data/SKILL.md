@@ -15,11 +15,11 @@ On-chain data intelligence for AI agents. Access token analytics, market trends,
 
 **Before doing anything, determine which path to use:**
 
-1. **Agent already has a wallet** (AgentKit, Privy, MPC, any `signMessage` capable wallet)?
+1. **Agent already has a wallet** (embedded, MPC, or any `signMessage` capable wallet)?
    → **Use SDK** (`@chainstream-io/sdk`). Do NOT use CLI. Implement `WalletSigner` interface with your wallet. See [shared/authentication.md](../shared/authentication.md) for code examples.
 
 2. **Agent does NOT have a wallet?**
-   → **Use CLI** (`npx @chainstream-io/cli`). CLI creates a Turnkey wallet and handles auth + x402 payment automatically.
+   → **Use CLI** (`npx @chainstream-io/cli`). Run `chainstream login` to create a wallet (no email required). CLI handles auth + x402 payment automatically.
 
 3. **Human user with API key from dashboard?**
    → **Use CLI with API Key**: `npx @chainstream-io/cli config set --key apiKey --value <key>` (read-only, no DeFi)

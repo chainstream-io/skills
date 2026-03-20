@@ -55,9 +55,10 @@ gemini extensions install https://github.com/chainstream-io/skills
 
 | Method | Command | Use Case |
 |--------|---------|----------|
-| Turnkey Wallet | `chainstream login` | Recommended, required for DeFi |
+| Wallet (default) | `chainstream login` | Creates EVM + Solana wallet, no email needed |
+| Bind email | `chainstream bind-email user@example.com` | Optional, for account recovery |
 | API Key | `chainstream config set --key apiKey --value <key>` | Read-only, dashboard users |
-| x402 (USDC) | Auto on 402 response | AI agents, no registration |
+| x402 (USDC) | Auto on 402 response | CLI auto-purchases quota with USDC |
 
 ## Usage Examples
 

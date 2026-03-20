@@ -27,7 +27,7 @@
 | Slippage exceeded | Price moved beyond tolerance | Re-quote with higher slippage, get fresh confirmation |
 | Insufficient balance | Wallet doesn't have enough tokens | Show current balance, suggest lower amount |
 | Job timeout | No on-chain confirmation within 60s | Show job ID and tx hash for manual verification |
-| Invalid signature | Wallet signing failed | Check wallet config: `chainstream config auth` |
+| Invalid signature | Wallet signing failed | Check wallet config: `chainstream wallet address` or re-login: `chainstream login` |
 
 ## Rate Limits
 
