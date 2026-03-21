@@ -1,6 +1,6 @@
 ---
 name: chainstream-data
-description: "Query and analyze on-chain data via CLI and 13 MCP tools across Solana, BSC, Ethereum. Use when user asks to search tokens, check token security or holders, track market trends or hot tokens, analyze wallet PnL or holdings, assess address risk (KYT), stream real-time trades, compare multiple tokens, or backtest trading strategies. Covers token analytics, market ranking, wallet profiling, compliance screening, and WebSocket streaming. Keywords: token, wallet, market, trending, PnL, holders, security, KYT, candles, WebSocket, on-chain data."
+description: "Query and analyze on-chain data via CLI and 12 MCP tools across Solana, BSC, Ethereum. Use when user asks to search tokens, check token security or holders, track market trends or hot tokens, analyze wallet PnL or holdings, stream real-time trades, compare multiple tokens, or backtest trading strategies. Covers token analytics, market ranking, wallet profiling, and WebSocket streaming. Keywords: token, wallet, market, trending, PnL, holders, security, candles, WebSocket, on-chain data."
 ---
 
 # ChainStream Data
@@ -92,12 +92,6 @@ const client = new ChainStreamClient("", { walletSigner: wallet });
 | Token balances | `npx @chainstream-io/cli wallet holdings --chain sol --address ADDR` | `wallets/profile` | [wallet-profiling.md](references/wallet-profiling.md) |
 | Transfer history | `npx @chainstream-io/cli wallet activity --chain sol --address ADDR` | `wallets/activity` | [wallet-profiling.md](references/wallet-profiling.md) |
 
-### KYT
-
-| Intent | CLI Command | MCP Tool | Reference |
-|--------|-------------|----------|-----------|
-| Address risk assessment | `npx @chainstream-io/cli kyt risk --chain sol --address ADDR` | `kyt/assess_risk` | [kyt-compliance.md](references/kyt-compliance.md) |
-
 ## Quickstart
 
 ### Via CLI (recommended)
@@ -160,12 +154,11 @@ Before recommending any token, always run `token security` — ChainStream's ris
 npx @chainstream-io/cli market trending (top 50)
 → AI multi-factor analysis (smart money, volume, momentum, safety)
 → npx @chainstream-io/cli token security (top 5 candidates)
-→ npx @chainstream-io/cli kyt risk (address risk on candidates)
 → Present results to user
 → If user wants to trade → load chainstream-defi skill
 ```
 
-**Do NOT load** wallet-profiling.md or kyt-compliance.md for this workflow.
+**Do NOT load** wallet-profiling.md for this workflow.
 
 ### Wallet Profiling Flow
 
@@ -220,7 +213,6 @@ For full error handling, see [shared/error-handling.md](../shared/error-handling
 | [token-research.md](references/token-research.md) | 25+ token endpoints, batch queries, security field meanings | Token analysis tasks |
 | [market-discovery.md](references/market-discovery.md) | Ranking/trade endpoints, multi-factor discovery workflow | Hot token discovery |
 | [wallet-profiling.md](references/wallet-profiling.md) | 15+ wallet endpoints, PnL logic, behavior patterns | Wallet analysis |
-| [kyt-compliance.md](references/kyt-compliance.md) | 14 KYT endpoints, risk levels, compliance flow | Compliance checks |
 | [websocket-streams.md](references/websocket-streams.md) | Channels, subscription format, heartbeat | Real-time streaming |
 
 ## Related Skills

@@ -88,7 +88,7 @@ When a user needs to purchase a subscription (wallet has no active plan or insuf
 
 Do NOT just say "you need the nano plan". Always show all options and let the user decide.
 
-In TTY mode, CLI auto-displays plans and prompts. In non-TTY mode, set `plan` in `~/.config/chainstream/config.json` or let x402 use the server default.
+The CLI always prompts for plan selection — there is no default plan. Every purchase requires the user to choose.
 
 ## Supported Payment Networks
 

@@ -131,7 +131,6 @@ For the full resolution table, see [references/currency-resolution.md](reference
 - NEVER execute `dex swap` without first calling `dex quote` — user must see price impact before committing funds
 - NEVER auto-confirm a swap — even if user said "buy X" without specifying amount, you MUST present quote and ask for confirmation; "implied consent" is NOT consent for financial operations
 - NEVER hide gas fees or price impact — present ALL costs transparently
-- NEVER proceed if `kyt risk` returns high risk on the output token — warn user and require explicit override
 - NEVER skip address format validation — wrong format = funds sent to void
 - NEVER use `--yes` flag to bypass confirmation unless user explicitly requests it
 

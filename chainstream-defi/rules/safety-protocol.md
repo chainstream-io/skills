@@ -33,7 +33,6 @@ Every destructive operation (swap, bridge, create, send) MUST:
 ## Emergency Abort
 
 Abort and show error if:
-- Token address fails KYT risk check (high risk)
 - Wallet balance is insufficient
 - Gas estimate exceeds 10% of trade value
 - API returns transaction simulation failure

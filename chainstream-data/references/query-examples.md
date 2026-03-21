@@ -205,23 +205,6 @@ curl -H "Authorization: Bearer $TOKEN" \
   "https://api.chainstream.io/v2/token/sol/DezXAZ.../traders/smart_money"
 ```
 
-## KYT Address Risk
-
-**"Check if this address is risky"**
-
-```bash
-{"tool": "kyt/assess_risk", "arguments": {"address": "0x1234...abcd", "chain": "eth"}}
-
-# REST — register then check
-curl -X POST -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"address":"0x1234...abcd","chain":"ethereum"}' \
-  "https://api.chainstream.io/v2/kyt/address"
-
-curl -H "Authorization: Bearer $TOKEN" \
-  "https://api.chainstream.io/v2/kyt/addresses/0x1234...abcd/risk"
-```
-
 ## Webhook Setup
 
 **"Notify me when whale wallets trade BONK"**

@@ -21,7 +21,7 @@ npx @chainstream-io/cli wallet pricing
 # or: curl https://api.chainstream.io/x402/pricing
 ```
 
-CLI in TTY mode shows all plans and prompts user to choose. In non-TTY mode, uses config `plan` or server default.
+CLI always shows all plans and prompts the user to choose — there is no default plan.
 
 ## CLI: Transparent Payment
 

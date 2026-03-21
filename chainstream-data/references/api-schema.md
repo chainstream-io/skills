@@ -2,16 +2,16 @@
 
 ## Supported Chains
 
-| Chain | Identifier | Data API | DeFi API | WebSocket | KYT |
-|-------|-----------|----------|----------|-----------|-----|
-| Solana | `sol` | Yes | Yes | Yes | Yes |
-| BSC | `bsc` | Yes | Yes | Yes | Yes |
-| Ethereum | `eth` | Yes | Yes | Yes | Yes |
-| Polygon | `polygon` | — | Bridge only | — | — |
-| Arbitrum | `arbitrum` | — | Bridge only | — | — |
-| Avalanche | `avalanche` | — | Bridge only | — | — |
-| Optimism | `optimism` | — | Bridge only | — | — |
-| zkSync | `zksync` | — | Bridge only | — | — |
+| Chain | Identifier | Data API | DeFi API | WebSocket |
+|-------|-----------|----------|----------|-----------|
+| Solana | `sol` | Yes | Yes | Yes |
+| BSC | `bsc` | Yes | Yes | Yes |
+| Ethereum | `eth` | Yes | Yes | Yes |
+| Polygon | `polygon` | — | Bridge only | — |
+| Arbitrum | `arbitrum` | — | Bridge only | — |
+| Avalanche | `avalanche` | — | Bridge only | — |
+| Optimism | `optimism` | — | Bridge only | — |
+| zkSync | `zksync` | — | Bridge only | — |
 
 ## Base URLs
 
@@ -118,14 +118,6 @@ Different endpoints consume different Units:
 - Per byte of data pushed: 0.005 Unit/byte
 - Connection and heartbeat: free
 
-### KYT/KYA Billing (USD, separate from Units)
-
-| Operation | Price |
-|-----------|-------|
-| Deposit Risk Assessment | $0.25 |
-| Withdrawal Risk Assessment | $0.25 |
-| Register Address | $1.25 |
-
 ### x402 Per-Tool Pricing (USDC)
 
 | Tool | Price |
@@ -140,7 +132,6 @@ Different endpoints consume different Units:
 | market/trending | $0.001 |
 | dex/quote | $0.001 |
 | dex/swap | $0.005 |
-| kyt/assess_risk | $0.01 |
 | trading/backtest | $0.05 |
 | Default (unlisted) | $0.001 |
 
@@ -150,5 +141,3 @@ Different endpoints consume different Units:
 |-------|-------------|
 | `webhook.read` | Read webhook endpoints |
 | `webhook.write` | Create/update/delete webhooks |
-| `kyt.read` | Read KYT risk data |
-| `kyt.write` | Register addresses/transfers for KYT |

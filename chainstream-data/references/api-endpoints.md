@@ -93,25 +93,6 @@ Complete reference for all `/v2/*` Data API endpoints. Base URL: `https://api.ch
 | GET | `/v2/ranking/{chain}/migrated` | Tokens that migrated to DEX from launchpad |
 | GET | `/v2/ranking/{chain}/stocks` | Stock-type tokens (real-world asset backed) |
 
-## KYT (Know Your Transaction)
-
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/v2/kyt/address` | Register address for risk assessment |
-| GET | `/v2/kyt/addresses/{address}/risk` | Get address risk score and categories |
-| POST | `/v2/kyt/transfer` | Register transfer for compliance screening |
-| GET | `/v2/kyt/transfers/{transferId}/summary` | Transfer risk summary |
-| GET | `/v2/kyt/transfers/{transferId}/alerts` | Transfer compliance alerts |
-| GET | `/v2/kyt/transfers/{transferId}/exposures/direct` | Direct exposure to risky entities |
-| GET | `/v2/kyt/transfers/{transferId}/network-identifications` | Network identification results |
-| POST | `/v2/kyt/withdrawal` | Register withdrawal for screening |
-| GET | `/v2/kyt/withdrawal/{withdrawalId}/summary` | Withdrawal risk summary |
-| GET | `/v2/kyt/withdrawal/{withdrawalId}/alerts` | Withdrawal alerts |
-| GET | `/v2/kyt/withdrawal/{withdrawalId}/exposures/direct` | Withdrawal direct exposure |
-| GET | `/v2/kyt/withdrawal/{withdrawalId}/address-identifications` | Address identification results |
-| GET | `/v2/kyt/withdrawal/{withdrawalId}/network-identifications` | Network identification results |
-| GET | `/v2/kyt/withdrawal/{withdrawalId}/fraud-assessment` | Fraud assessment score |
-
 ## Webhook
 
 | Method | Path | Description |

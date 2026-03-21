@@ -55,10 +55,9 @@ For each candidate:
 
 ```bash
 npx @chainstream-io/cli token security --chain sol --address <addr>
-npx @chainstream-io/cli kyt risk --chain sol --address <addr>
 ```
 
-Reject tokens with `isHoneypot=true`, `hasMintAuthority=true` with no renouncement, or high KYT risk.
+Reject tokens with `isHoneypot=true`, `hasMintAuthority=true` with no renouncement.
 
 ### Step 4: Present results
 

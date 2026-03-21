@@ -8,14 +8,14 @@ On-chain data intelligence and DeFi execution for AI agents across Solana, BSC, 
 
 | Skill | Coverage | Pattern |
 |-------|----------|---------|
-| [chainstream-data](chainstream-data/) | Token search, market trending, wallet PnL, KYT risk, WebSocket | Tool |
+| [chainstream-data](chainstream-data/) | Token search, market trending, wallet PnL, WebSocket | Tool |
 | [chainstream-defi](chainstream-defi/) | Token swap, cross-chain bridge, launchpad, transaction broadcast | Process |
 
 ## When to Use Which
 
 ```
 User intent involves reading data?
-  → chainstream-data (token info, market trends, wallet analysis, KYT)
+  → chainstream-data (token info, market trends, wallet analysis)
 
 User intent involves executing a transaction?
   → chainstream-defi (swap, bridge, create token, send tx)
