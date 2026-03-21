@@ -5,3 +5,9 @@ node_modules/
 __pycache__/
 *.pyc
 .cursor/
+
+# CI copies shared/ into skill dirs before publish — don't commit these
+chainstream-data/shared/
+chainstream-data/CLAUDE.md
+chainstream-defi/shared/
+chainstream-defi/CLAUDE.md
