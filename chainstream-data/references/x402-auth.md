@@ -14,16 +14,14 @@ Only the initial plan purchase involves a blockchain transaction. Subsequent API
 
 ## Plans
 
-| Plan | Price (USDC) | Quota (CU) | Duration |
-|------|-------------|------------|----------|
-| nano | $1 | 50,000 | 30 days |
-| micro | $5 | 350,000 | 30 days |
-| starter | $20 | 1,500,000 | 30 days |
-| growth | $50 | 4,000,000 | 30 days |
-| pro | $150 | 15,000,000 | 30 days |
-| business | $500 | 55,000,000 | 30 days |
+Plans are dynamic. Query the latest:
 
-Live pricing: `GET https://api.chainstream.io/x402/pricing`
+```bash
+npx @chainstream-io/cli wallet pricing
+# or: curl https://api.chainstream.io/x402/pricing
+```
+
+CLI in TTY mode shows all plans and prompts user to choose. In non-TTY mode, uses config `plan` or server default.
 
 ## CLI: Transparent Payment
 

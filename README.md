@@ -53,9 +53,13 @@ gemini extensions install https://github.com/chainstream-io/skills
 
 ## Authentication
 
+**IMPORTANT: Run `chainstream login` before any CLI command.** This creates a wallet and enables authentication. Without it, all commands will fail with "Not authenticated".
+
 | Method | Command | Use Case |
 |--------|---------|----------|
-| Wallet (default) | `chainstream login` | Creates EVM + Solana wallet, no email needed |
+| Wallet (default) | `chainstream login` | Creates Base + Solana wallet, no email needed. **Run this first.** |
+| Import key | `chainstream wallet set-raw --chain base` | Use your own private key |
+| Email login | `chainstream login --email user@example.com` | Recover wallet on new device |
 | Bind email | `chainstream bind-email user@example.com` | Optional, for account recovery |
 | API Key | `chainstream config set --key apiKey --value <key>` | Read-only, dashboard users |
 | x402 (USDC) | Auto on 402 response | CLI auto-purchases quota with USDC |

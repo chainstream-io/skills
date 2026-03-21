@@ -1,6 +1,6 @@
 # x402 Payment Protocol
 
-When the API returns `402 Payment Required`, a quota plan must be purchased with USDC.
+When the API returns `402 Payment Required`, a quota plan must be purchased with USDC. Plans provide a **compute unit (CU) quota** — each API call consumes CU based on the endpoint and data volume returned, NOT a fixed per-call cost.
 
 ## IMPORTANT: Use CLI or @x402/fetch — Do NOT manually construct payments
 
@@ -67,14 +67,28 @@ None of this can be done with `curl` or basic `signMessage`.
 
 ## Plans
 
-| Plan | USDC | Compute Units | Duration |
-|------|------|--------------|----------|
-| nano | $1 | 50,000 | 30 days |
-| micro | $5 | 350,000 | 30 days |
-| starter | $20 | 1,500,000 | 30 days |
-| growth | $50 | 4,000,000 | 30 days |
-| pro | $150 | 15,000,000 | 30 days |
-| business | $500 | 55,000,000 | 30 days |
+Plans and pricing are dynamic. **Always fetch the latest from the API — do NOT hardcode plan names or prices.**
+
+```bash
+# CLI: view all available plans
+npx @chainstream-io/cli wallet pricing
+
+# API (no auth required)
+curl https://api.chainstream.io/x402/pricing
+```
+
+### Agent behavior when payment is needed
+
+When a user needs to purchase a subscription (wallet has no active plan or insufficient USDC for auto-pay):
+
+1. **Fetch available plans**: run `npx @chainstream-io/cli wallet pricing` or call `GET /x402/pricing`
+2. **Present ALL plans to the user** with name, price, quota, and duration — let them choose
+3. **Explain what it means**: "A subscription gives you a pool of compute units (CU). Each API call consumes CU from the pool — the amount varies by endpoint and response size. The quota is valid for 30 days."
+4. **After user chooses**: ensure wallet has enough USDC on Base or Solana, then run the CLI command — payment happens automatically on retry
+
+Do NOT just say "you need the nano plan". Always show all options and let the user decide.
+
+In TTY mode, CLI auto-displays plans and prompts. In non-TTY mode, set `plan` in `~/.config/chainstream/config.json` or let x402 use the server default.
 
 ## Supported Payment Networks
 
@@ -85,6 +99,6 @@ CLI auto-payment supports both Base and Solana. The default payment chain is Bas
 
 ## Error Recovery
 
-- If payment fails: check wallet USDC balance on the payment network (Base or Solana)
+- If payment fails (insufficient USDC): tell user how much USDC is needed and on which network (Base or Solana), show wallet address for funding
 - If 402 persists after payment: wait 5s for settlement, then retry
-- Plan pricing available at `GET /x402/pricing` (no auth required)
+- To check available plans: `npx @chainstream-io/cli wallet pricing` or `GET /x402/pricing` (no auth required)

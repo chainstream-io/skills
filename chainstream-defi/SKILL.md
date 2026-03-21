@@ -26,12 +26,20 @@ DeFi operations **require a wallet**. API Key alone is insufficient.
    → **Use SDK** (`@chainstream-io/sdk`). Do NOT use CLI. Implement `WalletSigner` interface. Your wallet must also support `signTypedData` for x402 payment.
 
 2. **Agent does NOT have a wallet?**
-   → **Use CLI** (`npx @chainstream-io/cli`). CLI creates a Turnkey wallet, handles signing + x402 automatically.
+   → **Use CLI** (`npx @chainstream-io/cli`). **Run `chainstream login` first** to create a Turnkey wallet (no email needed). CLI then handles signing + x402 automatically.
 
 3. **Only API Key?**
    → Cannot execute DeFi operations. Tell user: "DeFi requires a wallet. Use SDK with your wallet or run `npx @chainstream-io/cli login`."
 
 For full auth guide with code examples, see [shared/authentication.md](../shared/authentication.md).
+
+## Prerequisites (CLI path)
+
+**All DeFi commands require a wallet. If you see "Not authenticated" or "Wallet required", run:**
+
+```bash
+npx @chainstream-io/cli login
+```
 
 ## Endpoint Selector
 
