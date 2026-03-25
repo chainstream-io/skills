@@ -28,7 +28,7 @@ Step-by-step verification for DeFi operations. Follow in order.
 ## Execution Phase
 
 - [ ] `dex swap` called with confirmed parameters
-- [ ] Transaction signed (Turnkey or local)
+- [ ] Transaction signed (TEE or local)
 - [ ] Signed tx broadcast via `/v2/transaction/:chain/send`
 - [ ] Job ID received
 

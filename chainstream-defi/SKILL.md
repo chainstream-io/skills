@@ -22,14 +22,19 @@ Execute DeFi operations: token swap, cross-chain bridge, launchpad creation, and
 
 DeFi operations **require a wallet**. API Key alone is insufficient.
 
-1. **Agent already has a wallet?**
-   → **Use SDK** (`@chainstream-io/sdk`). Do NOT use CLI. Implement `WalletSigner` interface. Your wallet must also support `signTypedData` for x402 payment.
+**Environment-aware decision (pick the path that matches how the agent runs):**
 
-2. **Agent does NOT have a wallet?**
-   → **Use CLI** (`npx @chainstream-io/cli`). **Run `chainstream login` first** to create a Turnkey wallet (no email needed). CLI then handles signing + x402 automatically.
+1. **Agent already has a wallet (`WalletSigner`)?**
+   → **Use SDK** (`@chainstream-io/sdk`). Do NOT use CLI for signing. Implement `WalletSigner` interface. Your wallet must also support `signTypedData` for x402 payment.
 
-3. **Only API Key?**
-   → Cannot execute DeFi operations. Tell user: "DeFi requires a wallet. Use SDK with your wallet or run `npx @chainstream-io/cli login`."
+2. **No embedded wallet — local terminal or CI available?**
+   → **Use CLI** (`npx @chainstream-io/cli`). **Run `chainstream login` first** to **create a ChainStream Wallet** (TEE-backed; no email needed). CLI then handles signing + x402 automatically.
+
+3. **Using MCP (streamable HTTP, e.g. `https://mcp.chainstream.io/mcp` — `dex/quote`, `dex/swap`, …)?**
+   → **Same wallet rules**: read-only tools (e.g. quotes) may work with API-only access depending on deployment; **destructive** tools still require wallet-backed authentication. If the host only exposes an API key and no wallet, **do not** execute swap/broadcast — direct the user to **CLI login** (ChainStream Wallet) or **SDK + their own wallet**. MCP does not remove the wallet requirement for on-chain execution.
+
+4. **Only API Key?**
+   → Cannot execute wallet-gated DeFi (swap, bridge broadcast, etc.). Tell user: "DeFi requires a wallet. Use SDK with your wallet or run `npx @chainstream-io/cli login`."
 
 For full auth guide with code examples, see [shared/authentication.md](../shared/authentication.md).
 
@@ -82,7 +87,7 @@ npx @chainstream-io/cli dex swap --chain sol --from <wallet> --input-token SOL -
 
 CLI internally:
 1. Calls `/v2/dex/:chain/swap` → gets unsigned transaction (base64)
-2. Signs via Turnkey TEE (or local raw key)
+2. Signs via TEE (or local raw key)
 3. Sends signed tx to `/v2/transaction/:chain/send`
 
 ### Phase 4: Poll + Output

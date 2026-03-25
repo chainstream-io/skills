@@ -12,7 +12,7 @@ Phase 2: User confirms
 Phase 3: chainstream dex swap
   → POST /v2/dex/:chain/swap
   → Returns: { serializedTx: base64 } (UNSIGNED transaction)
-  → CLI signs locally (Turnkey TEE or raw key)
+  → CLI signs locally (TEE or raw key)
   → POST /v2/transaction/:chain/send { signedTx: base64 }
   → Returns: { signature, jobId }
 

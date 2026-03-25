@@ -373,7 +373,7 @@ Different tasks need different levels of constraint. This is about matching free
 
 | Task Type | Should Have | Why | Example Skill |
 |-----------|-------------|-----|---------------|
-| Creative/Design | High freedom | Multiple valid approaches, differentiation is value | frontend-design |
+| Creative/Design | High freedom | Mulle valid approaches, differentiation is value | frontend-design |
 | Code review | Medium freedom | Principles exist but judgment required | code-review |
 | File format operations | Low freedom | One wrong byte corrupts file, consistency critical | docx, xlsx, pdf |
 
@@ -414,7 +414,7 @@ Through analyzing 17 official Skills, we identified 5 main design patterns:
 | Pattern | ~Lines | Key Characteristics | Example | When to Use |
 |---------|--------|---------------------|---------|-------------|
 | **Mindset** | ~50 | Thinking > technique, strong NEVER list, high freedom | frontend-design | Creative tasks requiring taste |
-| **Navigation** | ~30 | Minimal SKILL.md, routes to sub-files | internal-comms | Multiple distinct scenarios |
+| **Navigation** | ~30 | Minimal SKILL.md, routes to sub-files | internal-comms | Mulle distinct scenarios |
 | **Philosophy** | ~150 | Two-step: Philosophy → Express, emphasizes craft | canvas-design | Art/creation requiring originality |
 | **Process** | ~200 | Phased workflow, checkpoints, medium freedom | mcp-builder | Complex multi-step projects |
 | **Tool** | ~300 | Decision trees, code examples, low freedom | docx, pdf, xlsx | Precise operations on specific formats |
@@ -432,7 +432,7 @@ Through analyzing 17 official Skills, we identified 5 main design patterns:
 |---------------------------|---------------------|
 | Needs taste and creativity | Mindset (~50 lines) |
 | Needs originality and craft quality | Philosophy (~150 lines) |
-| Has multiple distinct sub-scenarios | Navigation (~30 lines) |
+| Has mulle distinct sub-scenarios | Navigation (~30 lines) |
 | Complex multi-step project | Process (~200 lines) |
 | Precise operations on specific format | Tool (~300 lines) |
 
