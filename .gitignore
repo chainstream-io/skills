@@ -5,6 +5,7 @@ node_modules/
 __pycache__/
 *.pyc
 .cursor/
+.agents/
 
 # CI copies shared/ into skill dirs before publish — don't commit these
 chainstream-data/shared/
