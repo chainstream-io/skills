@@ -88,7 +88,7 @@ Install via npx (no global install needed):
 npx @chainstream-io/cli token search --keyword PUMP --chain sol
 npx @chainstream-io/cli market trending --chain sol --duration 1h
 npx @chainstream-io/cli wallet pnl --chain sol --address <addr>
-npx @chainstream-io/cli dex quote --chain sol --input-token SOL --output-token <addr> --amount 1000000
+npx @chainstream-io/cli dex route --chain sol --from <wallet> --input-token SOL --output-token <addr> --amount 1000000
 ```
 
 ## MCP Server

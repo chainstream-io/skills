@@ -13,7 +13,7 @@ Complete reference for all `/v2/*` Data API endpoints. Base URL: `https://api.ch
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/v2/token/search` | Search tokens by keyword (name/symbol/address). Params: `keyword`, `chain`, `limit` |
+| GET | `/v2/token/search` | Search tokens by keyword (name/symbol/address). Params: `q`, `chains[]`, `limit` |
 | GET | `/v2/token/{chain}/list` | Paginated token list. Params: `offset`, `limit`, `sort` |
 | GET | `/v2/token/{chain}/multi` | Batch get tokens. Params: `addresses` (comma-separated) |
 | GET | `/v2/token/{chain}/{tokenAddress}` | Full token detail |

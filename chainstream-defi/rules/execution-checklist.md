@@ -10,11 +10,11 @@ Step-by-step verification for DeFi operations. Follow in order.
 - [ ] Chain is supported (sol/bsc/eth)
 - [ ] Wallet is configured (`chainstream config auth` shows active wallet)
 - [ ] Amount is reasonable (not zero, not exceeding known balance)
-- [ ] Slippage is within bounds (0.001 - 0.5)
+- [ ] Slippage is within bounds (0-100, integer percentage, e.g. 5 = 5%)
 
 ## Quote Phase
 
-- [ ] `dex quote` called successfully
+- [ ] `dex route` called successfully
 - [ ] Price impact calculated and displayed
 - [ ] Expected output amount shown
 - [ ] Gas estimate shown (if available)

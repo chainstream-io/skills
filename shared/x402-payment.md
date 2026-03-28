@@ -33,7 +33,7 @@ When a user needs to purchase a subscription:
 3. **Explain what it means**: "A subscription gives you a pool of compute units (CU). Each API call consumes CU from the pool — the amount varies by endpoint and response size. The quota is valid for 30 days."
 4. **Ask which payment method the user has**:
    - USDC on Base or Solana → use x402
-   - USDC.e or pathUSD on Tempo → use MPP
+   - USDC.e on Tempo → use MPP
    - No crypto wallet → obtain API Key from Dashboard
 5. **Wait for the user to confirm** both the plan and payment method
 6. **Execute the purchase**: `GET /x402/purchase?plan=<USER_CHOSEN>` or `GET /mpp/purchase?plan=<USER_CHOSEN>`

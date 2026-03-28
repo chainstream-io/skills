@@ -31,7 +31,7 @@ When a user wants to find trading opportunities, follow this workflow:
 ### Step 1: Fetch trending data
 
 ```bash
-npx @chainstream-io/cli market trending --chain sol --duration 1h --raw
+npx @chainstream-io/cli market trending --chain sol --duration 1h --json
 ```
 
 ### Step 2: AI multi-factor analysis

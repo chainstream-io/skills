@@ -41,14 +41,29 @@ What happens under the hood:
 4. CLI stores the organization ID and wallet addresses in `~/.config/chainstream/config.json`
 5. All API calls use SIWX wallet signature auth; x402 payment uses EIP-3009 signed authorization
 
+### Session management
+
+```bash
+npx @chainstream-io/cli config auth              # Show auth status
+npx @chainstream-io/cli config get               # Show all config
+npx @chainstream-io/cli config get --key apiKey   # Show specific key
+npx @chainstream-io/cli logout                    # Clear session (P-256 keys preserved)
+```
+
 ### Optional: Bind email for recovery
 
 After creating a wallet, you can optionally bind an email for account recovery:
 
 ```bash
+# Interactive (TTY terminal):
 npx @chainstream-io/cli bind-email user@example.com
 # Enter verification code: xxxxxx
 # Email user@example.com bound successfully.
+
+# Non-interactive (CI/CD, headless agent):
+npx @chainstream-io/cli bind-email user@example.com
+# Output: {"otpId":"...","email":"user@example.com","step":"verify"}
+npx @chainstream-io/cli bind-email-verify --otp-id <otpId> --code <code> --email user@example.com
 ```
 
 ### Optional: Email OTP login
