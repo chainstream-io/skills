@@ -23,7 +23,7 @@ npx @chainstream-io/cli config set --key apiKey --value <your_key>  # API key on
 
 ## Verify
 
-After restarting OpenCode, ask: "What ChainStream skills are available?"
+After restarting OpenCode, ask: "What ChainStream skills are available?" You should see `chainstream-data`, `chainstream-graphql`, and `chainstream-defi`.
 
 ## Updating
 

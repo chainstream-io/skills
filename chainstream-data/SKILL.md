@@ -185,4 +185,5 @@ On 401/402: ask the user "Do you have a ChainStream API Key?" — if yes, set it
 
 ## Related Skills
 
+- [chainstream-graphql](../chainstream-graphql/) — When standard REST/MCP endpoints aren't enough: custom GraphQL queries with cross-cube JOINs, aggregations, and complex filters on 22 on-chain cubes
 - [chainstream-defi](../chainstream-defi/) — When analysis leads to action: swap, launchpad, transaction signing and broadcast

@@ -3,8 +3,9 @@ name: Publish to ClawHub
 on:
   push:
     tags:
-      # chainstream-data@3.0.7 or chainstream-defi@1.0.6
+      # chainstream-data@3.0.7, chainstream-graphql@1.0.0, or chainstream-defi@1.0.6
       - "chainstream-data@*"
+      - "chainstream-graphql@*"
       - "chainstream-defi@*"
 
 jobs:

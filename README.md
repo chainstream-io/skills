@@ -9,13 +9,17 @@ On-chain data intelligence and DeFi execution for AI agents across Solana, BSC, 
 | Skill | Coverage | Pattern |
 |-------|----------|---------|
 | [chainstream-data](chainstream-data/) | Token search, market trending, wallet PnL, WebSocket | Tool |
+| [chainstream-graphql](chainstream-graphql/) | Custom GraphQL queries, cross-cube JOINs, aggregations, 22 on-chain cubes | Tool |
 | [chainstream-defi](chainstream-defi/) | Token swap, cross-chain bridge, launchpad, transaction broadcast | Process |
 
 ## When to Use Which
 
 ```
 User intent involves reading data?
-  → chainstream-data (token info, market trends, wallet analysis)
+  Standard queries (token info, market trends, wallet analysis)?
+    → chainstream-data (REST API / MCP — pre-built endpoints)
+  Custom analytics (cross-cube JOIN, aggregation, complex filters)?
+    → chainstream-graphql (GraphQL — flexible queries on 22 cubes)
 
 User intent involves executing a transaction?
   → chainstream-defi (swap, bridge, create token, send tx)
@@ -78,6 +82,8 @@ show my wallet PnL on Solana
 swap 0.1 SOL for <token_address>
 check job status <job_id>
 show K-line chart for <token_address>
+what cubes are available in the GraphQL schema?
+query the top 50 tokens by 24h volume using GraphQL
 ```
 
 ## CLI
@@ -89,6 +95,8 @@ npx @chainstream-io/cli token search --keyword PUMP --chain sol
 npx @chainstream-io/cli market trending --chain sol --duration 1h
 npx @chainstream-io/cli wallet pnl --chain sol --address <addr>
 npx @chainstream-io/cli dex route --chain sol --from <wallet> --input-token SOL --output-token <addr> --amount 1000000
+npx @chainstream-io/cli graphql schema --summary
+npx @chainstream-io/cli graphql query --query 'query { TokenRanking(network: sol, limit: {count: 10}, orderBy: Volume24hUSD_DESC) { Token { Name Symbol } PriceUSD Volume24hUSD } }'
 ```
 
 ## MCP Server

@@ -4,12 +4,14 @@
 
 | Skill | When to Use |
 |-------|-------------|
-| `chainstream-data` | User asks about token info, security, price, holders, market trends, wallet PnL, holdings — any read-only on-chain query |
+| `chainstream-data` | User asks about token info, security, price, holders, market trends, wallet PnL, holdings — any read-only on-chain query via REST/MCP |
+| `chainstream-graphql` | User needs custom analytics — cross-cube JOINs, aggregations, complex filters, or data not exposed by REST API. Flexible GraphQL on 22 on-chain cubes |
 | `chainstream-defi` | User wants to swap tokens, bridge cross-chain, create tokens, execute trades — any on-chain transaction |
 
 ## Routing
 
-- Data queries (token/market/wallet) → `chainstream-data`
+- Standard data queries (token/market/wallet) → `chainstream-data`
+- Custom analytics (cross-cube JOIN, aggregation, flexible queries) → `chainstream-graphql`
 - Financial execution (swap/bridge/launchpad/tx) → `chainstream-defi`
 
 ## Execution

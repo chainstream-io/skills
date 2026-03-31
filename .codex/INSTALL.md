@@ -28,7 +28,7 @@ npx @chainstream-io/cli config set --key apiKey --value <your_key>  # API key on
 ls -la ~/.agents/skills/chainstream
 ```
 
-You should see two skill directories: `chainstream-data`, `chainstream-defi`.
+You should see three skill directories: `chainstream-data`, `chainstream-graphql`, `chainstream-defi`.
 
 ## Updating
 

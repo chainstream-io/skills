@@ -1,16 +1,23 @@
-.DS_Store
+# Environment
 *.env
 .env.*
+
+# Node / Python (if used locally)
 node_modules/
 __pycache__/
 *.pyc
+
+# Editor / agent local
 .cursor/
 .agents/
 
-# CI copies shared/ into skill dirs before publish — don't commit these
+# CI publish copies — not source of truth
 chainstream-data/shared/
 chainstream-data/CLAUDE.md
 chainstream-graphql/shared/
 chainstream-graphql/CLAUDE.md
 chainstream-defi/shared/
 chainstream-defi/CLAUDE.md
+
+# Misc
+.DS_Store
