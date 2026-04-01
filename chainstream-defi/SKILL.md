@@ -227,4 +227,4 @@ For the full resolution table, see [references/currency-resolution.md](reference
 ## Related Skills
 
 - [chainstream-data](../chainstream-data/) — Token research, market discovery, wallet analysis before trading
-- [chainstream-graphql](../chainstream-graphql/) — Custom GraphQL analytics: cross-cube JOINs, aggregations, flexible queries on 22 on-chain cubes
+- [chainstream-graphql](../chainstream-graphql/) — Custom GraphQL analytics: cross-cube JOINs, aggregations, flexible queries on 17 on-chain cubes

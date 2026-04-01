@@ -4,31 +4,35 @@ Ready-to-use query templates for common blockchain analytics scenarios. Replace 
 
 All queries use `network: sol` (Solana) by default. Change to `eth` or `bsc` as needed.
 
-## Token Discovery & Ranking
+## Token Discovery & Analytics
 
-### Trending Tokens (by 24h volume)
+### Trending Tokens by Volume (TokenTradeStats)
 
 ```graphql
 query {
-  TokenRanking(network: sol, limit: {count: 50}, orderBy: Volume24hUSD_DESC) {
-    Token { Address Name Symbol }
-    PriceUSD
-    Volume24hUSD
-    Trades24h
-    PriceChange24hPct
-    MarketCapUSD
+  TokenTradeStats(
+    network: sol
+    limit: {count: 50}
+    orderBy: VolumeUSD_DESC
+    where: {Block: {Time: {since: "2026-03-30 00:00:00"}}}
+  ) {
+    Token { Address }
+    VolumeUSD TradeCount BuyCount SellCount
+    UniqueBuyers UniqueSellers
+    joinToken { Token { Name Symbol ImageUrl } }
   }
 }
 ```
 
-### Token Latest Price
+### Latest Price (via OHLC)
 
 ```graphql
 query {
-  TokenLatestPrice(network: sol, where: {Token: {Address: {is: "So11111111111111111111111111111111111111112"}}}) {
+  OHLC(network: sol, limit: {count: 1}, tokenAddress: {is: "So11111111111111111111111111111111111111112"}) {
+    TimeMinute
     Token { Address }
-    PriceUSD
-    LastTradeAt
+    Price { Close }
+    VolumeUSD
   }
 }
 ```
@@ -46,17 +50,6 @@ query {
 }
 ```
 
-### Token Market Cap
-
-```graphql
-query {
-  TokenMarketCap(network: sol, tokenAddress: {is: "TOKEN_ADDRESS"}, limit: {count: 1}) {
-    Token { Address }
-    PriceUSD MarketCapUSD TotalSupply FDVUSD LastSeen
-  }
-}
-```
-
 ## DEX Trades
 
 ### Latest Trades
@@ -66,9 +59,9 @@ query {
   DEXTrades(network: sol, limit: {count: 25}, orderBy: Block_Time_DESC) {
     Block { Time }
     Trade {
-      Buy { Currency { MintAddress } Amount PriceInUSD }
-      Sell { Currency { MintAddress } Amount }
-      Dex { ProtocolName }
+      Buy { Currency { MintAddress Symbol Name } Amount PriceInUSD }
+      Sell { Currency { MintAddress Symbol Name } Amount }
+      Dex { ProtocolName ProtocolFamily }
     }
   }
 }
@@ -90,18 +83,19 @@ query {
 }
 ```
 
-### Trades with Token Names (joinBuyToken)
+### Trades with Token Images (joinBuyToken)
+
+Symbol and Name are now inline in `Currency`. Use `joinBuyToken`/`joinSellToken` only when you need extra TokenSearch fields like `ImageUrl`.
 
 ```graphql
 query {
   DEXTrades(network: sol, limit: {count: 25}, orderBy: Block_Time_DESC) {
     Block { Time }
     Trade {
-      Buy { Currency { MintAddress } Amount PriceInUSD }
-      Sell { Currency { MintAddress } Amount }
+      Buy { Currency { MintAddress Symbol Name } Amount PriceInUSD }
+      Sell { Currency { MintAddress Symbol Name } Amount }
     }
-    joinBuyToken { Token { Name Symbol ImageUrl } }
-    joinSellToken { Token { Name Symbol } }
+    joinBuyToken { Token { ImageUrl } }
   }
 }
 ```
@@ -201,18 +195,7 @@ query {
 }
 ```
 
-### Token Top Holders
-
-```graphql
-query {
-  TokenHolders(network: sol, limit: {count: 20}, tokenAddress: {is: "TOKEN_ADDRESS"}) {
-    Holder { Address }
-    Token { Address }
-    Balance BalanceUSD
-    LastUpdated
-  }
-}
-```
+> **Token Holders**: Top-holder data is available via the REST API (`chainstream-data` skill), not through GraphQL.
 
 ## Transfers
 
@@ -298,15 +281,43 @@ query {
 }
 ```
 
-### Pool Liquidity Snapshots
+## DEXTradeByTokens (Token-Centric)
+
+### All Trades for a Specific Token
+
+Token-centric view: both buy and sell sides appear as rows with the queried token as the primary `Currency`.
 
 ```graphql
 query {
-  PoolLiquiditySnapshots(network: sol, limit: {count: 20}, tokenAddress: {is: "TOKEN_ADDRESS"}) {
-    Pool { Address ProgramAddress }
-    TokenA { Address }
-    TokenB { Address }
-    LiquidityUSD EventCount LastSeen
+  DEXTradeByTokens(
+    network: sol
+    tokenAddress: {is: "TOKEN_ADDRESS"}
+    limit: {count: 50}
+    orderBy: Block_Time_DESC
+  ) {
+    Block { Time }
+    Trade {
+      Currency { MintAddress Symbol Name }
+      Amount AmountInUSD
+      Side { Type Currency { MintAddress Symbol } Amount AmountInUSD }
+      Dex { ProtocolName ProtocolFamily }
+    }
+  }
+}
+```
+
+### Buy vs Sell Volume Analysis
+
+```graphql
+query {
+  DEXTradeByTokens(
+    network: sol
+    tokenAddress: {is: "TOKEN_ADDRESS"}
+    where: {Block: {Time: {since: "2026-03-24 00:00:00"}}}
+  ) {
+    Trade { Side { Type } }
+    count
+    sum(of: Trade_AmountInUSD)
   }
 }
 ```
@@ -332,8 +343,9 @@ When analyzing query results, use this mapping to choose appropriate visualizati
 | Data Pattern | Recommended Chart | Example Query |
 |-------------|------------------|---------------|
 | Time series (price, volume over time) | Line / Candlestick | OHLC, TokenTradeStats |
-| Ranking (top tokens, top holders) | Bar chart / Leaderboard | TokenRanking, TokenHolders |
+| Ranking (top tokens by volume) | Bar chart / Leaderboard | TokenTradeStats, DEXTradeByTokens |
 | Distribution (asset allocation) | Pie / Treemap | WalletTokenPnL grouped |
+| Buy vs Sell breakdown | Stacked bar / Pie | DEXTradeByTokens grouped by Side.Type |
 | Comparison (cross-chain, cross-protocol) | Grouped bar | DEXTrades grouped by Dex |
 | Real-time feed (trade stream) | Table with scrolling | DEXTrades latest |
 | Single metric (total count, total volume) | Metric card | Aggregation-only queries |

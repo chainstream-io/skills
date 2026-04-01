@@ -1,15 +1,15 @@
 ---
 name: chainstream-graphql
 description: >-
-  Execute flexible GraphQL queries against ChainStream's on-chain data warehouse (22 cubes across Solana, Ethereum, BSC).
+  Execute flexible GraphQL queries against ChainStream's on-chain data warehouse (17 cubes across Solana, Ethereum, BSC).
   Use when user needs custom analytics beyond standard REST/MCP — cross-cube JOINs, custom aggregations, complex WHERE filters,
   time-series analysis, or SQL-level flexibility on blockchain data. Supports x402/MPP auto-payment.
-  Keywords: GraphQL, query, cube, DEXTrades, TokenRanking, OHLC, aggregation, join, on-chain analytics, custom query.
+  Keywords: GraphQL, query, cube, DEXTrades, DEXTradeByTokens, OHLC, aggregation, join, on-chain analytics, custom query.
 ---
 
 # ChainStream GraphQL
 
-Flexible GraphQL interface to ChainStream's on-chain data warehouse. 22 cubes covering DEX trades, token analytics, wallet PnL, transfers, blocks, transactions, and more — across Solana, Ethereum, and BSC.
+Flexible GraphQL interface to ChainStream's on-chain data warehouse. 17 cubes covering DEX trades, token-centric trade analysis, OHLC, wallet PnL, transfers, blocks, transactions, and more — across Solana, Ethereum, and BSC.
 
 - **Endpoint**: `https://graphql.chainstream.io/graphql` (routed through APISIX gateway)
 - **CLI**: `npx @chainstream-io/cli graphql`
@@ -25,7 +25,7 @@ Flexible GraphQL interface to ChainStream's on-chain data warehouse. 22 cubes co
 | Custom aggregation (count, sum, avg with groupBy) | **GraphQL** | Metrics + dimension grouping |
 | Complex filters (multi-condition WHERE, nested) | **GraphQL** | Full filter operator support |
 | Time-series data with custom resolution | **GraphQL** | OHLC cube + time filters |
-| Data not exposed by REST API | **GraphQL** | Direct access to all 22 cubes |
+| Data not exposed by REST API | **GraphQL** | Direct access to all 17 cubes |
 
 ## Integration Path
 
@@ -81,7 +81,7 @@ npx @chainstream-io/cli wallet pricing
 npx @chainstream-io/cli graphql schema --summary
 ```
 
-This returns a compact list of all 22 cubes with descriptions and top-level fields. If you need details on a specific cube:
+This returns a compact list of all 17 cubes with descriptions and top-level fields. If you need details on a specific cube:
 
 ```bash
 npx @chainstream-io/cli graphql schema --type DEXTrades

@@ -92,9 +92,8 @@ joinXxx adds a LEFT JOIN to the target cube, returning related fields inline. Av
 ### Key Join Scenarios
 
 **Token name/symbol enrichment** (→ TokenSearch):
-- DEXTrades: `joinBuyToken`, `joinSellToken`
+- DEXTrades: `joinBuyToken`, `joinSellToken` (for extra fields like ImageUrl; Symbol/Name are already inline in Currency)
 - Transfers, BalanceUpdates, OHLC: `joinToken`
-- PoolLiquiditySnapshots, PoolSlippageStats: `joinTokenA`, `joinTokenB`
 
 ```graphql
 query {
@@ -139,15 +138,50 @@ query {
 }
 ```
 
-**Aggregation enrichment** (market cap, ranking, price):
-- DEXTrades: `joinBuyTokenMarketCap`, `joinBuyTokenPrice`, `joinBuyTokenRanking`
-- DEXPools: `joinPoolLiquidity`, `joinPoolSlippage`
-- Transfers: `joinTokenMarketCap`
-
 ### V1 Constraints
 
 - Max 1 level of join (no nested joins)
 - LEFT JOIN only
+
+## DEXTradeByTokens — Token-Centric Trade View
+
+`DEXTradeByTokens` provides a **token-centric** view of DEX trades by performing a `UNION ALL` of buy and sell sides from `DEXTrades`. Each row has the queried token as the primary `Currency`, with `Trade.Side.Type` (`buy` or `sell`) indicating the trade direction.
+
+### When to Use
+
+| Scenario | Cube |
+|----------|------|
+| Analyze a specific token's all trades (buy + sell) in one query | **DEXTradeByTokens** |
+| See buy/sell ratio, volume breakdown by direction | **DEXTradeByTokens** (group by `Trade.Side.Type`) |
+| Analyze a specific trade pair (buy token vs sell token) | DEXTrades |
+| Join with instructions, transfers, or logs | DEXTrades / SolTransactions |
+
+### Key Fields
+
+- `Trade.Currency { MintAddress Symbol Name }` — the primary token being analyzed
+- `Trade.Side.Currency { MintAddress Symbol Name }` — the counter-party token
+- `Trade.Side.Type` — `buy` or `sell` (direction relative to the primary token)
+- `Trade.Side.Amount`, `Trade.Side.AmountInUSD` — counter-side amounts
+- `Trade.Amount`, `Trade.AmountInUSD` — primary token amounts
+
+```graphql
+query {
+  DEXTradeByTokens(
+    network: sol
+    tokenAddress: {is: "TOKEN_ADDRESS"}
+    limit: {count: 50}
+    orderBy: Block_Time_DESC
+  ) {
+    Block { Time }
+    Trade {
+      Currency { MintAddress Symbol Name }
+      Amount AmountInUSD
+      Side { Type Currency { MintAddress Symbol } Amount AmountInUSD }
+      Dex { ProtocolName ProtocolFamily }
+    }
+  }
+}
+```
 
 ## Common Mistakes
 
@@ -155,8 +189,7 @@ query {
 |-------|---------|------|
 | `PriceChange24h` | `PriceChange24hPct` | Always use the `Pct` suffix |
 | `PriceChange1h` | `PriceChange1hPct` | Same |
-| `DEXTrades.Currency.Symbol` | `joinBuyToken { Token { Symbol } }` | Currency only has MintAddress + Decimals |
-| `DEXTrades.Currency.Name` | `joinBuyToken { Token { Name } }` | Use join for name/symbol |
+| `joinBuyToken` just for Symbol/Name | `Trade.Buy.Currency { Symbol Name }` | DEXTrades now includes Symbol/Name inline; use joinBuyToken only for extra TokenSearch fields (ImageUrl, etc.) |
 | `{ Solana { ... } }` | `CubeName(network: sol)` | NOT Bitquery format |
 | `Block: {Time: {gt: "..."}}` | `Block: {Time: {since: "..."}}` | DateTimeFilter, not IntFilter |
 | `"2026-03-31T00:00:00Z"` | `"2026-03-31 00:00:00"` | ClickHouse format, no T/Z |
