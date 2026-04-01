@@ -58,11 +58,8 @@ npx @chainstream-io/cli login
 # Show configured wallet addresses
 npx @chainstream-io/cli wallet address
 
-# Show wallet balance (native + tokens)
+# Show wallet balance (native + tokens, supports sol/base)
 npx @chainstream-io/cli wallet balance --chain sol
-
-# Show only native token balance (SOL/ETH/BNB)
-npx @chainstream-io/cli wallet balance --chain sol --native-only
 
 # Sign a transaction (uses configured Turnkey or raw wallet)
 npx @chainstream-io/cli wallet sign --chain sol --tx <base64-serializedTx>

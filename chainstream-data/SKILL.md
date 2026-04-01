@@ -119,8 +119,7 @@ npx @chainstream-io/cli wallet set-raw --chain base
 | PnL details | `npx @chainstream-io/cli wallet pnl --chain sol --address ADDR` | `wallets_profile` | [wallet-profiling.md](references/wallet-profiling.md) |
 | Token balances | `npx @chainstream-io/cli wallet holdings --chain sol --address ADDR` | `wallets_profile` | [wallet-profiling.md](references/wallet-profiling.md) |
 | Transfer history | `npx @chainstream-io/cli wallet activity --chain sol --address ADDR` | `wallets_activity` | [wallet-profiling.md](references/wallet-profiling.md) |
-| Own wallet balance (native) | `npx @chainstream-io/cli wallet balance --chain sol --native-only` | — | — |
-| Own wallet balance (native + tokens) | `npx @chainstream-io/cli wallet balance --chain sol` | — | Requires subscription for token list |
+| Own wallet balance (base/sol) | `npx @chainstream-io/cli wallet balance --chain sol` | — | Supports `sol` and `base` |
 
 ### Subscription
 
