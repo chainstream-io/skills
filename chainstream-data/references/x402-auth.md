@@ -71,6 +71,18 @@ Authorization: SIWX <base64(message)>.<signature>
 
 The SDK/CLI handles SIWX token creation and caching automatically. See [authentication.md](../../shared/authentication.md) for details.
 
+## Check Current Subscription
+
+```bash
+# CLI (auto-detects wallet from config)
+npx @chainstream-io/cli plan status
+
+# API
+curl "https://api.chainstream.io/x402/status?chain=evm&address=0x..."
+```
+
+Returns plan name, quota usage, expiry, and active status. See [x402-payment.md](../../shared/x402-payment.md#check-current-subscription) for response format.
+
 ## Supported Networks
 
 | Network | Chain ID | USDC Contract |

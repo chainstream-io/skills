@@ -66,8 +66,8 @@ gemini extensions install https://github.com/chainstream-io/skills
 | Email login | `chainstream login --email user@example.com` | Recover wallet on new device |
 | Bind email | `chainstream bind-email user@example.com` | Optional, for account recovery |
 | API Key | `chainstream config set --key apiKey --value <key>` | Read-only, dashboard users |
-| x402 (USDC) | Auto on 402 response | CLI auto-purchases quota with USDC |
-| x402 → API Key | Auto on 402 response | CLI auto-purchases quota, **returns API Key** for MCP/SDK use |
+| x402 (USDC) | Interactive on 402 | CLI prompts for plan selection, pays with USDC (Base/Solana). Quota is in **CU (Compute Units)**, not call count |
+| x402 → API Key | Interactive on 402 | Same as above — also returns API Key for MCP/SDK use |
 
 ## Usage Examples
 
@@ -79,6 +79,7 @@ is <token_address> safe to buy?
 show top holders of <token_address>
 what tokens are trending on SOL right now?
 show my wallet PnL on Solana
+check my current subscription status
 swap 0.1 SOL for <token_address>
 check job status <job_id>
 show K-line chart for <token_address>

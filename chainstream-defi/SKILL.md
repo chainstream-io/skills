@@ -207,7 +207,7 @@ For the full resolution table, see [references/currency-resolution.md](reference
 | Insufficient balance | Not enough funds | Show balance, suggest amount |
 | Job timeout | No confirmation in 60s | Show pending status + tx hash for manual check |
 | Stale transaction / expired blockhash / nonce too old | Transaction built too long ago | Rebuild from Step 1 (`dex route`), get fresh unsigned tx, re-confirm with user |
-| 402 | No quota | CLI auto-handles via x402 (do NOT manually curl). See [shared/x402-payment.md](../shared/x402-payment.md) |
+| 402 | No quota (CU) | Check `plan status` first. If no subscription, show plans and let user choose — CLI purchase is interactive. See [shared/x402-payment.md](../shared/x402-payment.md) |
 
 ## Rules
 

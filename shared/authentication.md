@@ -244,6 +244,21 @@ SDK/CLI automatically caches the token and refreshes before expiry. Agent never 
 
 Server checks in order: SIWX → API Key → JWT Bearer.
 
+## Check Current Subscription
+
+```bash
+# CLI (auto-detects wallet chain and address from config)
+npx @chainstream-io/cli plan status
+
+# With explicit parameters
+npx @chainstream-io/cli plan status --chain evm --address 0x...
+
+# API (no auth required)
+curl "https://api.chainstream.io/x402/status?chain=evm&address=0x..."
+```
+
+Returns current plan name, quota usage (used/total CU), expiry date, and active status. See [x402-payment.md](x402-payment.md#check-current-subscription) for full response format.
+
 ## Address Linking (Cross-Chain SIWX)
 
 When a user has wallets on multiple chains (e.g., EVM + Solana via Turnkey embedded wallet), a single x402 payment only registers SIWX auth for the paying chain. **Address Linking** allows the user to associate additional chain addresses with the same subscription, so SIWX auth works regardless of which chain they sign with.
