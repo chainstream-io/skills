@@ -30,7 +30,7 @@ DeFi operations **require a wallet**. API Key alone is insufficient.
    → **Use SDK** (`@chainstream-io/sdk`). Do NOT use CLI for signing. Implement `WalletSigner` interface. Your wallet must also support `signTypedData` for x402 payment.
 
 2. **No embedded wallet — local terminal or CI available?**
-   → **Use CLI** (`npx @chainstream-io/cli`). **Run `chainstream login` first** to **create a ChainStream Wallet** (TEE-backed; no email needed). CLI then handles signing + x402 automatically.
+   → **Use CLI** (`npx @chainstream-io/cli`). **Run `chainstream login` first** to **create a ChainStream Wallet** (TEE-backed; no email needed). CLI handles transaction signing; for x402 subscription, run `plan purchase --plan <name>` separately.
 
 3. **Using MCP (streamable HTTP, e.g. `https://mcp.chainstream.io/mcp` — `dex/swap`, …)?**
    → **Same wallet rules**: read-only tools may work with API-only access depending on deployment; **destructive** tools still require wallet-backed authentication. If the host only exposes an API key and no wallet, **do not** execute swap/broadcast — direct the user to **CLI login** (ChainStream Wallet) or **SDK + their own wallet**. MCP does not remove the wallet requirement for on-chain execution.
@@ -204,7 +204,7 @@ For the full resolution table, see [references/currency-resolution.md](reference
 | Insufficient balance | Not enough funds | Show balance, suggest amount |
 | Job timeout | No confirmation in 60s | Show pending status + tx hash for manual check |
 | Stale transaction / expired blockhash / nonce too old | Transaction built too long ago | Rebuild from Step 1 (`dex route`), get fresh unsigned tx, re-confirm with user |
-| 402 | No quota (CU) | Check `plan status` first. If no subscription, show plans and let user choose — CLI purchase is interactive. See [shared/x402-payment.md](../shared/x402-payment.md) |
+| 402 | No quota (CU) | Check `plan status` first. If no subscription: `wallet pricing` to show plans, let user choose, then `plan purchase --plan <name>`. See [shared/x402-payment.md](../shared/x402-payment.md) |
 
 ## Rules
 

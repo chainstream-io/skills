@@ -105,7 +105,7 @@ npx @chainstream-io/cli graphql query --query 'query {
 }' --json
 ```
 
-If the user has no subscription, CLI will prompt for plan selection and x402 payment (real USDC transfer via EIP-3009 signature). This only works in interactive terminals — in agent/pipe mode, check `plan status` first and guide user through purchase explicitly.
+If the user has no subscription, use the non-interactive purchase flow: `plan status --json` → `wallet pricing --json` (present plans to user) → `plan purchase --plan <USER_CHOSEN> --json` (signs x402 payment, returns API Key). See [x402-payment.md](../shared/x402-payment.md) for details.
 
 ### Step 3: Analyze Results
 

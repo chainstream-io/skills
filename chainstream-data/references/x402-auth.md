@@ -25,24 +25,21 @@ CLI always shows all plans and prompts the user to choose — there is no defaul
 
 ## CLI: x402 Payment Flow
 
-CLI automates the x402 signing flow, but this is a **real USDC payment** — an EIP-3009 `signTypedData` that authorizes fund transfer from the user's wallet. Agents MUST present plan options and get user confirmation before any purchase.
-
-**⚠️ CLI auto-purchase only works in interactive terminals** (human user at keyboard). In agent/pipe mode, the interactive plan selection prompt will hang. Agents must explicitly: check `plan status` → run `wallet pricing` → present plans to user → let user choose → have user run purchase in their terminal.
+Purchase a subscription using `plan purchase`. This involves a **real USDC payment** — an EIP-3009 `signTypedData` that authorizes fund transfer from the user's wallet.
 
 ```bash
-# In an interactive terminal (human present):
-npx @chainstream-io/cli token search --keyword BTC --chain eth
+# 1. Show plans
+npx @chainstream-io/cli wallet pricing --json
 
-# If no subscription exists, CLI prompts the user to choose a plan:
-# [chainstream] No active subscription. Available plans:
-# [chainstream]   1. nano   - $X/mo (Y CU)
-# [chainstream]   2. micro  - $X/mo (Y CU)
-# [chainstream]   ...
-# [chainstream] Select a plan: _
-# [chainstream] Signing x402 payment (USDC transfer)...
-# [chainstream] Subscription activated (expires: 2026-04-19T...)
-# { data: [...] }
+# 2. User chooses plan
+
+# 3. Purchase (signs EIP-3009 authorization, pays USDC, returns API Key)
+npx @chainstream-io/cli plan purchase --plan <USER_CHOSEN> --json
+# Output: { "plan": "nano", "apiKey": "cs_live_...", "expiresAt": "..." }
+# API Key auto-saved to config.
 ```
+
+If a data command returns 402 without a subscription, the CLI will display a clear error guiding you to run `plan purchase`. Always present plans and get user confirmation before purchasing.
 
 ## SDK: `@x402/fetch`
 
