@@ -33,7 +33,7 @@ On-chain data intelligence for AI agents. Access token analytics, market trends,
 
 **Getting an API Key (required for all paths):**
 - Dashboard users: [app.chainstream.io](https://app.chainstream.io) → API Keys
-- AI Agents (x402): Run `npx @chainstream-io/cli wallet pricing` → present ALL plans to user → let user choose → then `npx @chainstream-io/cli` will handle x402 payment on the next data query (interactive prompt — only works in human terminal, NOT in pipe mode)
+- AI Agents (x402): Run `npx @chainstream-io/cli wallet pricing` → present ALL plans to user → let user choose → x402 purchase involves **real USDC payment** (EIP-3009 signature + on-chain transfer). CLI auto-purchase only works in interactive terminals (human user present); in agent/pipe mode, interactive prompts will fail — agent must guide user to run purchase in their terminal, or use MPP path below
 - AI Agents (MPP): `tempo request "https://api.chainstream.io/mpp/purchase?plan=<PLAN>"` → MPP payment (USDC.e on Tempo) → API Key auto-returned (fetch `/mpp/pricing` first, let user choose plan)
 
 **⚠️ CRITICAL for AI agents**: CLI purchase is **interactive** (prompts for plan + payment method on stdin). In agent/pipe environments, interactive prompts will fail. The correct agent flow is:
@@ -83,7 +83,8 @@ npx @chainstream-io/cli config set --key apiKey --value <your-api-key>
 npx @chainstream-io/cli login
 
 # Option C: Import existing key (dev/testing)
-npx @chainstream-io/cli wallet set-raw --chain base
+npx @chainstream-io/cli wallet set-raw --chain base   # EVM (Base) key
+npx @chainstream-io/cli wallet set-raw --chain sol     # Solana key
 ```
 
 ### SDK path
@@ -119,7 +120,7 @@ npx @chainstream-io/cli wallet set-raw --chain base
 | PnL details | `npx @chainstream-io/cli wallet pnl --chain sol --address ADDR` | `wallets_profile` | [wallet-profiling.md](references/wallet-profiling.md) |
 | Token balances | `npx @chainstream-io/cli wallet holdings --chain sol --address ADDR` | `wallets_profile` | [wallet-profiling.md](references/wallet-profiling.md) |
 | Transfer history | `npx @chainstream-io/cli wallet activity --chain sol --address ADDR` | `wallets_activity` | [wallet-profiling.md](references/wallet-profiling.md) |
-| Own wallet balance (base/sol) | `npx @chainstream-io/cli wallet balance --chain sol` | — | Supports `sol` and `base` |
+| Own wallet balance (base/sol) | `npx @chainstream-io/cli wallet balance --chain sol` | — | Supports `sol` and `base` (note: `base` is a payment chain, not a data chain) |
 
 ### Subscription
 

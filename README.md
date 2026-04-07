@@ -62,7 +62,7 @@ gemini extensions install https://github.com/chainstream-io/skills
 | Method | Command | Use Case |
 |--------|---------|----------|
 | Wallet (default) | `chainstream login` | Creates ChainStream Wallet (TEE), no email needed. **Run this first.** |
-| Import key | `chainstream wallet set-raw --chain base` | Use your own private key |
+| Import key | `chainstream wallet set-raw --chain base` (EVM) or `--chain sol` (Solana) | Use your own private key |
 | Email login | `chainstream login --email user@example.com` | Recover wallet on new device |
 | Bind email | `chainstream bind-email user@example.com` | Optional, for account recovery |
 | API Key | `chainstream config set --key apiKey --value <key>` | Read-only, dashboard users |

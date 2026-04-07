@@ -87,13 +87,22 @@ npx @chainstream-io/cli verify --otp-id <otpId> --code <code> --email user@examp
 For agents that already have a Base (EVM) or Solana private key and want to use the CLI (no wallet creation, no email):
 
 ```bash
-# Import your existing private key (Base or Solana)
+# Import Base (EVM) private key
 npx @chainstream-io/cli wallet set-raw --chain base
 # Enter private key: <your hex private key>
 
-# Verify address
+# Import Solana private key
+npx @chainstream-io/cli wallet set-raw --chain sol
+# Enter private key: <your base58 private key>
+
+# Verify addresses
 npx @chainstream-io/cli wallet address
-# EVM: 0xYourAddress
+# EVM:    0xYourAddress
+# Solana: YourSolanaAddress
+
+# Set payment chain to match your funded wallet
+npx @chainstream-io/cli config set --key walletChain --value base  # if paying with Base USDC
+npx @chainstream-io/cli config set --key walletChain --value sol    # if paying with Solana USDC
 
 # All commands now use your imported key for auth + x402 payment
 npx @chainstream-io/cli token search --keyword PUMP --chain sol
@@ -134,18 +143,22 @@ const client = new ChainStreamClient("", {
   walletSigner: myWallet,
 });
 
-// ── Step 3: Set up x402 payment (handles 402 → pay → retry) ──
+// ── Step 3: Set up x402 payment (handles 402 → sign → retry) ──
+// ⚠️ x402 payment involves REAL USDC transfer (EIP-3009 signTypedData).
+//    Always present plan options and get user confirmation before purchase.
 const x402 = new x402Client();
-// Base: register with viem-compatible Account (must support signTypedData)
+// Register ONE payment scheme based on your wallet's chain:
+// Base (USDC) — requires signTypedData (EIP-712)
 x402.register("eip155:8453", new ExactEvmScheme(yourViemCompatibleAccount));
-// OR Solana: register with @solana/kit signer
-// x402.register("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", new ExactSvmScheme(solanaSigner));
+// Solana (USDC) — requires @solana/kit signer
+x402.register("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", new ExactSvmScheme(solanaSigner));
 const x402Fetch = wrapFetchWithPayment(fetch, x402);
 
 // ── Step 4: Purchase quota if needed ──
 // First API call may return 402 if no subscription exists.
-// Option A: Let x402Fetch handle it transparently
-await x402Fetch("https://api.chainstream.io/x402/purchase?plan=<PLAN>");
+// Plan name MUST come from user's explicit selection — NEVER hardcode a plan.
+// Option A: x402Fetch automates the 402 → sign → retry flow
+await x402Fetch("https://api.chainstream.io/x402/purchase?plan=<USER_CHOSEN_PLAN>");
 // Option B: SDK calls — catch 402, purchase, retry
 try {
   const tokens = await client.token.search({ q: "PUMP", chains: ["sol"] });
