@@ -9,7 +9,7 @@ On-chain data intelligence and DeFi execution for AI agents across Solana, BSC, 
 | Skill | Coverage | Pattern |
 |-------|----------|---------|
 | [chainstream-data](chainstream-data/) | Token search, market trending, wallet PnL, WebSocket | Tool |
-| [chainstream-graphql](chainstream-graphql/) | Custom GraphQL queries, cross-cube JOINs, aggregations, 17 on-chain cubes | Tool |
+| [chainstream-graphql](chainstream-graphql/) | Custom GraphQL queries, cross-cube JOINs, aggregations, 25 on-chain cubes (3 chain groups) | Tool |
 | [chainstream-defi](chainstream-defi/) | Token swap, cross-chain bridge, launchpad, transaction broadcast | Process |
 
 ## When to Use Which
@@ -19,7 +19,7 @@ User intent involves reading data?
   Standard queries (token info, market trends, wallet analysis)?
     → chainstream-data (REST API / MCP — pre-built endpoints)
   Custom analytics (cross-cube JOIN, aggregation, complex filters)?
-    → chainstream-graphql (GraphQL — flexible queries on 17 cubes)
+    → chainstream-graphql (GraphQL — flexible queries on 25 cubes in 3 chain groups)
 
 User intent involves executing a transaction?
   → chainstream-defi (swap, bridge, create token, send tx)
@@ -97,7 +97,7 @@ npx @chainstream-io/cli market trending --chain sol --duration 1h
 npx @chainstream-io/cli wallet pnl --chain sol --address <addr>
 npx @chainstream-io/cli dex route --chain sol --from <wallet> --input-token SOL --output-token <addr> --amount 1000000
 npx @chainstream-io/cli graphql schema --summary
-npx @chainstream-io/cli graphql query --query 'query { DEXTradeByTokens(network: sol, tokenAddress: {is: "TOKEN_ADDRESS"}, limit: {count: 10}, orderBy: Block_Time_DESC) { Block { Time } Trade { Currency { Symbol } Amount AmountInUSD Side { Type } } } }'
+npx @chainstream-io/cli graphql query --query 'query { Solana { DEXTradeByTokens(where: {Trade: {Currency: {MintAddress: {is: "TOKEN_ADDRESS"}}}}, limit: {count: 10}, orderBy: {descending: Block_Time}) { Block { Time } Trade { Currency { Symbol } Amount AmountInUSD Side { Type } } } } }'
 ```
 
 ## MCP Server

@@ -1,7 +1,7 @@
 ---
 name: chainstream-graphql
 description: >-
-  Execute flexible GraphQL queries against ChainStream's on-chain data warehouse (17 cubes across Solana, Ethereum, BSC).
+  Execute flexible GraphQL queries against ChainStream's on-chain data warehouse (25 cubes in 3 chain groups: EVM, Solana, Trading).
   Use when user needs custom analytics beyond standard REST/MCP — cross-cube JOINs, custom aggregations, complex WHERE filters,
   time-series analysis, or SQL-level flexibility on blockchain data. Supports x402/MPP auto-payment.
   Keywords: GraphQL, query, cube, DEXTrades, DEXTradeByTokens, OHLC, aggregation, join, on-chain analytics, custom query.
@@ -9,7 +9,7 @@ description: >-
 
 # ChainStream GraphQL
 
-Flexible GraphQL interface to ChainStream's on-chain data warehouse. 17 cubes covering DEX trades, token-centric trade analysis, OHLC, wallet PnL, transfers, blocks, transactions, and more — across Solana, Ethereum, and BSC.
+Flexible GraphQL interface to ChainStream's on-chain data warehouse. 25 cubes organized in 3 chain groups (EVM / Solana / Trading), covering DEX trades, token-centric trade analysis, OHLC, wallet PnL, transfers, blocks, transactions, prediction markets, and more — across Solana, Ethereum, BSC, and Polygon.
 
 - **Endpoint**: `https://graphql.chainstream.io/graphql` (routed through APISIX gateway)
 - **CLI**: `npx @chainstream-io/cli graphql`
@@ -21,11 +21,12 @@ Flexible GraphQL interface to ChainStream's on-chain data warehouse. 17 cubes co
 | Scenario | Use | Why |
 |----------|-----|-----|
 | Standard token search, market trending, wallet profile | `chainstream-data` (REST/MCP) | Pre-built endpoints, simpler |
-| Cross-cube JOIN (trades + instructions, trades + token names) | **GraphQL** | joinXxx support |
+| Cross-cube JOIN (trades + instructions, trades + transfers) | **GraphQL** | joinXxx support |
 | Custom aggregation (count, sum, avg with groupBy) | **GraphQL** | Metrics + dimension grouping |
-| Complex filters (multi-condition WHERE, nested) | **GraphQL** | Full filter operator support |
-| Time-series data with custom resolution | **GraphQL** | OHLC cube + time filters |
-| Data not exposed by REST API | **GraphQL** | Direct access to all 17 cubes |
+| Complex filters (multi-condition WHERE, nested, OR via `any`) | **GraphQL** | Full filter operator support |
+| Time-series data with custom resolution | **GraphQL** | Time interval bucketing + dimension aggregation |
+| Prediction market data (PolyMarket) | **GraphQL** | PredictionTrades/Managements/Settlements cubes (Polygon) |
+| Data not exposed by REST API | **GraphQL** | Direct access to all 25 cubes |
 
 ## Integration Path
 
@@ -70,7 +71,7 @@ npx @chainstream-io/cli wallet pricing
 | Force-refresh cached schema | `npx @chainstream-io/cli graphql schema --summary --refresh` |
 | Execute inline query | `npx @chainstream-io/cli graphql query --query '<graphql>'` |
 | Execute query from file | `npx @chainstream-io/cli graphql query --file ./query.graphql` |
-| Execute with variables | `npx @chainstream-io/cli graphql query --query '...' --var '{"network":"eth"}'` |
+| Execute with variables | `npx @chainstream-io/cli graphql query --query '...' --var '{"key":"value"}'` |
 | Machine-readable output | Append `--json` to any command |
 
 ## AI Workflow
@@ -81,7 +82,7 @@ npx @chainstream-io/cli wallet pricing
 npx @chainstream-io/cli graphql schema --summary
 ```
 
-This returns a compact list of all 17 cubes with descriptions and top-level fields. If you need details on a specific cube:
+This returns a compact list of all 25 cubes organized by chain group (EVM/Solana/Trading) with descriptions and top-level fields. If you need details on a specific cube:
 
 ```bash
 npx @chainstream-io/cli graphql schema --type DEXTrades
@@ -95,9 +96,11 @@ Based on schema knowledge + user intent, construct a GraphQL query and execute:
 
 ```bash
 npx @chainstream-io/cli graphql query --query 'query {
-  DEXTrades(network: sol, limit: {count: 25}, orderBy: Block_Time_DESC) {
-    Block { Time }
-    Trade { Buy { Currency { MintAddress } Amount PriceInUSD } Sell { Currency { MintAddress } Amount } Dex { ProtocolName } }
+  Solana {
+    DEXTrades(limit: {count: 25}, orderBy: {descending: Block_Time}) {
+      Block { Time }
+      Trade { Buy { Currency { MintAddress } Amount PriceInUSD } Sell { Currency { MintAddress } Amount } Dex { ProtocolName } }
+    }
   }
 }' --json
 ```
@@ -113,27 +116,64 @@ If the user has no subscription, CLI auto-handles x402 payment transparently —
 
 ## Query Construction Quick Reference
 
-```
+The schema uses **chain group wrappers** as the top-level entry point:
+
+```graphql
+# Solana (no network arg needed)
 query {
-  CubeName(network: sol|eth|bsc, limit: {count: N}, orderBy: Field_DESC, where: {...}) {
-    FieldGroup { SubField }
-    joinXxx { ... }
-    count
+  Solana {
+    CubeName(limit: {count: N}, orderBy: {descending: Field}, where: {...}) {
+      FieldGroup { SubField }
+      joinXxx { ... }
+      count
+    }
+  }
+}
+
+# EVM (network required: eth | bsc | polygon)
+query {
+  EVM(network: eth) {
+    CubeName(limit: {count: N}, orderBy: {descending: Field}, where: {...}) {
+      FieldGroup { SubField }
+    }
+  }
+}
+
+# Trading (cross-chain pre-aggregated, no network arg)
+query {
+  Trading {
+    OHLC(tokenAddress: {is: "..."}, limit: {count: 24}) {
+      TimeMinute
+      Price { Open High Low Close }
+    }
   }
 }
 ```
 
-- **network**: Required on every cube. `sol` = Solana, `eth` = Ethereum, `bsc` = BSC.
+- **Chain group wrapper**: Top-level required. `Solana`, `EVM(network: ...)`, or `Trading`.
+- **network**: Only on `EVM` wrapper. Values: `eth`, `bsc`, `polygon`.
 - **limit**: `{count: N, offset: M}`. Default 25.
-- **orderBy**: `FieldPath_ASC` or `FieldPath_DESC`. Most cubes default to `Block_Time_DESC`.
-- **where**: `{Group: {Field: {operator: value}}}`.
+- **orderBy**: `{descending: Field}` or `{ascending: Field}`. For computed fields: `{descendingByField: "field_name"}`.
+- **where**: `{Group: {Field: {operator: value}}}`. OR conditions: `any: [{...}, {...}]`.
 - **DateTime format**: `"YYYY-MM-DD HH:MM:SS"` — NO `T`, NO `Z`. Critical for ClickHouse.
 - **DateTimeFilter**: `since`, `till`, `after`, `before` — NEVER `gt`/`lt`.
 - **joinXxx**: LEFT JOIN to related cubes. Always prefer over multiple queries.
+- **dataset**: Optional wrapper arg — `realtime`, `archive`, or `combined` (default).
+- **aggregates**: Optional wrapper arg — `yes`, `no`, or `only`.
+
+## Chain Groups and Cubes
+
+| Chain Group | Wrapper | Cubes |
+|------------|---------|-------|
+| **Solana** | `Solana { ... }` | DEXTrades, DEXTradeByTokens, Transfers, BalanceUpdates, DEXPoolEvents, TokenSupplyUpdates, Blocks, Transactions, Instructions, Rewards, DEXOrders, DEXPools, TokenHolders, TransactionBalances, WalletTokenPnl |
+| **EVM** | `EVM(network: eth\|bsc\|polygon) { ... }` | DEXTrades, DEXTradeByTokens, Transfers, BalanceUpdates, DEXPoolEvents, TokenSupplyUpdates, Blocks, Transactions, Events, Calls, MinerRewards, DEXPools, TokenHolders, DEXPoolSlippages, TransactionBalances, Uncles, WalletTokenPnl, PredictionTrades*, PredictionManagements*, PredictionSettlements* |
+| **Trading** | `Trading { ... }` | OHLC, TokenTradeStats |
+
+*Prediction cubes only available on `polygon` network.
 
 ## NEVER Do
 
-- NEVER use Bitquery syntax (`{ Solana { ... } }` or `{ EVM { ... } }`) — this is a completely different schema
+- NEVER use flat query format (`CubeName(network: sol)` without chain group wrapper) — always wrap in `Solana { ... }`, `EVM(network: ...) { ... }`, or `Trading { ... }`
 - NEVER guess field names without checking schema first — run `graphql schema --summary` or `--type`
 - NEVER use ISO 8601 datetime format (`2026-03-31T00:00:00Z`) — ClickHouse requires `"2026-03-31 00:00:00"`
 - NEVER use `gt`/`lt` on DateTime fields — use `since`/`after`/`before`/`till`
@@ -156,8 +196,8 @@ On 401/402: ask the user "Do you have a ChainStream API Key?" — if yes, set it
 
 | Reference | Content | When to Load |
 |-----------|---------|--------------|
-| [schema-guide.md](references/schema-guide.md) | Query syntax, filter operators, joinXxx rules, common mistakes | Before constructing any query |
-| [query-patterns.md](references/query-patterns.md) | 15+ ready-to-use query templates by scenario | When building queries for common use cases |
+| [schema-guide.md](references/schema-guide.md) | Query syntax, filter operators, joinXxx rules, advanced patterns, common mistakes | Before constructing any query |
+| [query-patterns.md](references/query-patterns.md) | 20+ ready-to-use query templates by scenario | When building queries for common use cases |
 | [x402-payment.md](../shared/x402-payment.md) | x402 and MPP payment protocols, plan purchase flow | On 402 errors or when user needs subscription |
 | [authentication.md](../shared/authentication.md) | API Key setup, wallet auth, MCP config | On auth errors |
 
