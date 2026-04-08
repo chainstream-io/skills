@@ -27,19 +27,26 @@ CLI always shows all plans and prompts the user to choose — there is no defaul
 
 Purchase a subscription using `plan purchase`. This involves a **real USDC payment** — an EIP-3009 `signTypedData` that authorizes fund transfer from the user's wallet.
 
+`plan purchase` uses the configured `walletChain` for payment. **Default is `base`**. If USDC is on Solana, set `walletChain` to `sol` first.
+
 ```bash
-# 1. Show plans
+# 1. Show plans — present ALL to user, let them choose
 npx @chainstream-io/cli wallet pricing --json
 
-# 2. User chooses plan
+# 2. Check wallet balance to find USDC
+npx @chainstream-io/cli wallet balance --chain base --json   # check Base
+npx @chainstream-io/cli wallet balance --chain sol --json    # check Solana
 
-# 3. Purchase (signs EIP-3009 authorization, pays USDC, returns API Key)
+# 3. Set payment chain if USDC is on Solana (default is base)
+npx @chainstream-io/cli config set --key walletChain --value sol
+
+# 4. Purchase (signs EIP-3009 authorization, pays USDC, returns API Key)
 npx @chainstream-io/cli plan purchase --plan <USER_CHOSEN> --json
 # Output: { "plan": "nano", "apiKey": "cs_live_...", "expiresAt": "..." }
 # API Key auto-saved to config.
 ```
 
-If a data command returns 402 without a subscription, the CLI will display a clear error guiding you to run `plan purchase`. Always present plans and get user confirmation before purchasing.
+If a data command returns 402 without a subscription, the CLI shows an error guiding you to run `plan purchase`. Always present plans and get user confirmation before purchasing.
 
 ## SDK: `@x402/fetch`
 

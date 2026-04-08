@@ -35,35 +35,39 @@ When a user needs to purchase a subscription:
    - USDC on Base or Solana → use x402
    - USDC.e on Tempo → use MPP
    - No crypto wallet → obtain API Key from Dashboard
-5. **Configure payment chain** (x402 only):
-   - User has USDC on Base → `npx @chainstream-io/cli config set --key walletChain --value base` (default after `chainstream login`, usually no action needed)
+5. **Check wallet balance** (x402 only): `wallet balance --chain base` and/or `--chain sol` to confirm USDC is available
+6. **Set payment chain** (x402 only, default is `base`):
+   - User has USDC on Base → no action needed (default)
    - User has USDC on Solana → `npx @chainstream-io/cli config set --key walletChain --value sol`
-6. **Wait for the user to confirm** both the plan and payment method
-7. **Execute the purchase**: `GET /x402/purchase?plan=<USER_CHOSEN>` or `GET /mpp/purchase?plan=<USER_CHOSEN>`
+7. **Wait for the user to confirm** both the plan and payment chain
+8. **Execute the purchase**: `plan purchase --plan <USER_CHOSEN> --json` (x402) or `tempo request .../mpp/purchase?plan=<USER_CHOSEN>` (MPP)
 
 **NEVER hardcode a plan name in the URL.** The `?plan=` parameter MUST come from the user's explicit selection. Do NOT say "you need the nano plan" — always show all options and let the user decide.
 
 ### Purchase flow (CLI)
 
-Use the `plan purchase` command to subscribe. Works in all environments (terminal, AI agent, CI/CD):
+`plan purchase` uses the configured `walletChain` for payment. **Default is `base`** (set after `chainstream login`). If your USDC is on Solana, you must set `walletChain` to `sol` before purchasing.
 
 ```bash
 # Step 1: Check existing subscription
 npx @chainstream-io/cli plan status --json
 
-# Step 2: Show plans (machine-readable) — present ALL to user, let them choose
+# Step 2: Show plans — present ALL to user, let them choose
 npx @chainstream-io/cli wallet pricing --json
 
-# Step 3: Configure payment chain if needed (default is base after login)
-npx @chainstream-io/cli config set --key walletChain --value sol   # if user has USDC on Solana
+# Step 3: Check wallet balance to confirm USDC is on the right chain
+npx @chainstream-io/cli wallet balance --chain base --json   # check Base
+npx @chainstream-io/cli wallet balance --chain sol --json    # check Solana
+# Default payment chain is base. If USDC is on Solana:
+npx @chainstream-io/cli config set --key walletChain --value sol
 
-# Step 4: Purchase after user confirms (non-interactive — signs x402 and pays directly)
+# Step 4: Purchase (uses configured walletChain — real USDC payment via EIP-3009 signature)
 npx @chainstream-io/cli plan purchase --plan <USER_CHOSEN> --json
 # Output: { "plan": "nano", "apiKey": "cs_live_...", "expiresAt": "..." }
-# API Key is auto-saved to config. Agent can now make data queries.
+# API Key auto-saved to config.
 ```
 
-This command performs real USDC payment (EIP-3009 `signTypedData`). Always present plans and get explicit user confirmation before calling `plan purchase`.
+Always present plans and get explicit user confirmation before calling `plan purchase`.
 
 For MPP (USDC.e on Tempo), `plan purchase` is not available — use `tempo request` instead (see MPP section below).
 

@@ -38,9 +38,10 @@ On-chain data intelligence for AI agents. Access token analytics, market trends,
 
 **⚠️ Purchase flow (x402)**:
 1. `plan status --json` — check if subscription already exists
-2. If no subscription: `wallet pricing --json` — get plan list, present ALL plans to user, let user choose. **NEVER auto-select a plan.**
-3. `plan purchase --plan <USER_CHOSEN> --json` — x402 purchase (real USDC payment via EIP-3009 signature). API Key auto-saved to config
-4. Proceed with data queries
+2. If no subscription: `wallet pricing --json` — present ALL plans, let user choose. **NEVER auto-select a plan.**
+3. `wallet balance --chain base --json` (and/or `--chain sol`) — check where user has USDC
+4. If USDC is on Solana: `config set --key walletChain --value sol` (default is `base`)
+5. `plan purchase --plan <USER_CHOSEN> --json` — x402 purchase (real USDC payment). API Key auto-saved to config
 
 **⚠️ Quota is CU, NOT call count**: Plan quota is measured in **Compute Units (CU)**, not API call count. Each API endpoint costs a different amount of CU per call (varies by endpoint complexity and response size). When presenting plans to the user, always use "CU" as the unit — NEVER say "calls" or "requests".
 
