@@ -215,5 +215,5 @@ On 401/402, follow this exact sequence:
 
 ## Related Skills
 
-- [chainstream-graphql](../chainstream-graphql/) — When standard REST/MCP endpoints aren't enough: custom GraphQL queries with cross-cube JOINs, aggregations, and complex filters on 17 on-chain cubes
+- [chainstream-graphql](../chainstream-graphql/) — When standard REST/MCP endpoints aren't enough: custom GraphQL queries with cross-cube JOINs, aggregations, and complex filters on 27 on-chain cubes
 - [chainstream-defi](../chainstream-defi/) — When analysis leads to action: swap, launchpad, transaction signing and broadcast

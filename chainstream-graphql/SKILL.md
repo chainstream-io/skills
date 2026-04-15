@@ -1,15 +1,15 @@
 ---
 name: chainstream-graphql
 description: >-
-  Execute flexible GraphQL queries against ChainStream's on-chain data warehouse (25 cubes in 3 chain groups: EVM, Solana, Trading).
+  Execute flexible GraphQL queries against ChainStream's on-chain data warehouse (27 cubes in 3 chain groups: EVM, Solana, Trading).
   Use when user needs custom analytics beyond standard REST/MCP — cross-cube JOINs, custom aggregations, complex WHERE filters,
   time-series analysis, or SQL-level flexibility on blockchain data. Supports x402/MPP auto-payment.
-  Keywords: GraphQL, query, cube, DEXTrades, DEXTradeByTokens, OHLC, aggregation, join, on-chain analytics, custom query.
+  Keywords: GraphQL, query, cube, DEXTrades, DEXTradeByTokens, Pairs, aggregation, join, on-chain analytics, custom query.
 ---
 
 # ChainStream GraphQL
 
-Flexible GraphQL interface to ChainStream's on-chain data warehouse. 25 cubes organized in 3 chain groups (EVM / Solana / Trading), covering DEX trades, token-centric trade analysis, OHLC, wallet PnL, transfers, blocks, transactions, prediction markets, and more — across Solana, Ethereum, BSC, and Polygon.
+Flexible GraphQL interface to ChainStream's on-chain data warehouse. 27 cubes organized in 3 chain groups (EVM / Solana / Trading), covering DEX trades, token-centric trade analysis, trading pairs, transfers, blocks, transactions, prediction markets, and more — across Solana, Ethereum, BSC, and Polygon.
 
 - **Endpoint**: `https://graphql.chainstream.io/graphql` (routed through APISIX gateway)
 - **CLI**: `npx @chainstream-io/cli graphql`
@@ -26,7 +26,7 @@ Flexible GraphQL interface to ChainStream's on-chain data warehouse. 25 cubes or
 | Complex filters (multi-condition WHERE, nested, OR via `any`) | **GraphQL** | Full filter operator support |
 | Time-series data with custom resolution | **GraphQL** | Time interval bucketing + dimension aggregation |
 | Prediction market data (PolyMarket) | **GraphQL** | PredictionTrades/Managements/Settlements cubes (Polygon) |
-| Data not exposed by REST API | **GraphQL** | Direct access to all 25 cubes |
+| Data not exposed by REST API | **GraphQL** | Direct access to all 27 cubes |
 
 ## Integration Path
 
@@ -82,7 +82,7 @@ npx @chainstream-io/cli wallet pricing
 npx @chainstream-io/cli graphql schema --summary
 ```
 
-This returns a compact list of all 25 cubes organized by chain group (EVM/Solana/Trading) with descriptions and top-level fields. If you need details on a specific cube:
+This returns a compact list of all 27 cubes organized by chain group (EVM/Solana/Trading) with descriptions and top-level fields. If you need details on a specific cube:
 
 ```bash
 npx @chainstream-io/cli graphql schema --type DEXTrades
@@ -142,7 +142,7 @@ query {
 # Trading (cross-chain pre-aggregated, no network arg)
 query {
   Trading {
-    OHLC(tokenAddress: {is: "..."}, limit: {count: 24}) {
+    Pairs(tokenAddress: {is: "..."}, limit: {count: 24}) {
       TimeMinute
       Price { Open High Low Close }
     }
@@ -165,9 +165,9 @@ query {
 
 | Chain Group | Wrapper | Cubes |
 |------------|---------|-------|
-| **Solana** | `Solana { ... }` | DEXTrades, DEXTradeByTokens, Transfers, BalanceUpdates, DEXPoolEvents, TokenSupplyUpdates, Blocks, Transactions, Instructions, Rewards, DEXOrders, DEXPools, TokenHolders, TransactionBalances, WalletTokenPnl |
-| **EVM** | `EVM(network: eth\|bsc\|polygon) { ... }` | DEXTrades, DEXTradeByTokens, Transfers, BalanceUpdates, DEXPoolEvents, TokenSupplyUpdates, Blocks, Transactions, Events, Calls, MinerRewards, DEXPools, TokenHolders, DEXPoolSlippages, TransactionBalances, Uncles, WalletTokenPnl, PredictionTrades*, PredictionManagements*, PredictionSettlements* |
-| **Trading** | `Trading { ... }` | OHLC, TokenTradeStats |
+| **Solana** | `Solana { ... }` | DEXTrades, DEXTradeByTokens, Transfers, BalanceUpdates, Blocks, Transactions, DEXPools, Instructions, InstructionBalanceUpdates, Rewards, DEXOrders, TokenSupplyUpdates |
+| **EVM** | `EVM(network: eth\|bsc\|polygon) { ... }` | DEXTrades, DEXTradeByTokens, Transfers, BalanceUpdates, Blocks, Transactions, DEXPoolEvents, Events, Calls, MinerRewards, DEXPoolSlippages, TokenHolders, TransactionBalances, Uncles, PredictionTrades*, PredictionManagements*, PredictionSettlements* |
+| **Trading** | `Trading { ... }` | Pairs, Tokens, Currencies, Trades |
 
 *Prediction cubes only available on `polygon` network.
 

@@ -47,7 +47,7 @@ query {
 ```graphql
 query {
   Trading {
-    OHLC(tokenAddress: {is: "TOKEN_ADDRESS"}, limit: {count: 24}) {
+    Pairs(tokenAddress: {is: "TOKEN_ADDRESS"}, limit: {count: 24}) {
       TimeMinute
       Token { Address }
       Price { Open High Low Close }
