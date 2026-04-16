@@ -54,7 +54,7 @@ npx @chainstream-io/cli logout                    # Clear session (P-256 keys pr
 
 ### Optional: Bind email for recovery
 
-After creating a wallet, you can optionally bind an email for account recovery. Binding alone does **not** upgrade the trial plan — the upgrade happens on first `login --email`:
+After creating a wallet, you can optionally bind an email for account recovery. This also **auto-upgrades the trial plan to micro** ($5, 350K CU, 30 days; dedup by email — same email only grants once):
 
 ```bash
 # Interactive (TTY terminal):
@@ -70,7 +70,7 @@ npx @chainstream-io/cli bind-email-verify --otp-id <otpId> --code <code> --email
 
 ### Optional: Email OTP login
 
-If you prefer email-based login (e.g., to recover an existing wallet on a new device). **First-time email login auto-upgrades the trial plan to micro** ($5, 350K CU, 30 days; dedup by email). This is the only trigger for the upgrade — `bind-email` alone does not upgrade:
+If you prefer email-based login (e.g., to recover an existing wallet on a new device). First-time email login also auto-upgrades the trial plan to micro ($5, 350K CU; dedup by email):
 
 ```bash
 # Interactive (TTY terminal):

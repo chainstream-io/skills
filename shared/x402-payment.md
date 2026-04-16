@@ -16,13 +16,13 @@ New users are **automatically granted a subscription plan** on login — no manu
 | Action | Auto-granted Plan | Quota | Dedup |
 |--------|------------------|-------|-------|
 | `chainstream login` (new wallet created) | nano ($1) | 50,000 CU / 30 days | Per wallet (Turnkey org) |
-| `chainstream login --email` (email login) | micro ($5) | 350,000 CU / 30 days | Per email address |
+| `chainstream bind-email` or `chainstream login --email` | micro ($5) | 350,000 CU / 30 days | Per email address |
 
 - **Key-based users**: auto-receive nano plan (50K CU) immediately on first login
-- **Email-login users**: auto-upgraded to micro plan (350K CU) on first `login --email`
-- **`bind-email` alone does NOT upgrade** — it only enables email recovery; the upgrade triggers on email login
+- **Email-verified users**: auto-upgraded to micro plan (350K CU) on `bind-email` or `login --email`
+- **Dedup by email**: same email address only grants the micro upgrade once, even if bound to multiple wallets
 - **No manual purchase step**: the plan is activated server-side; `plan status` will show the active trial plan
-- **Upgrade behavior**: email login replaces the nano plan with micro (quota is reset to micro's full allocation)
+- **Upgrade behavior**: email verification replaces the nano plan with micro (quota is reset to micro's full allocation)
 
 Trial plans are **server-side only** — no on-chain transaction occurs. Agents do not need to change their workflow; the user already has API access after `chainstream login`.
 
