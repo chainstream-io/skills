@@ -69,6 +69,8 @@ gemini extensions install https://github.com/chainstream-io/skills
 | x402 (USDC) | Interactive on 402 | CLI prompts for plan selection, pays with USDC (Base/Solana). Quota is in **CU (Compute Units)**, not call count |
 | x402 → API Key | Interactive on 402 | Same as above — also returns API Key for MCP/SDK use |
 
+> **Free trial**: `chainstream login` auto-grants a nano plan ($1, 50K CU, 30 days). `login --email` (email login) auto-upgrades to micro plan ($5, 350K CU, 30 days). `bind-email` alone does not trigger upgrade — it only enables email recovery. No manual purchase needed for trial.
+
 ## Usage Examples
 
 Natural language prompts you can send to any AI assistant with ChainStream skills:

@@ -21,7 +21,7 @@ Alternative: MCP tools at `https://mcp.chainstream.io/mcp` (streamable-http)
 
 ## Auth
 
-**MUST run `chainstream login` before any CLI command.** This creates a wallet (no email required). Without it, commands fail with "Not authenticated". Before data queries, check subscription: `npx @chainstream-io/cli plan status`. If no subscription, show plans (`wallet pricing`) and let user choose — CLI purchase is interactive and will NOT work in pipe mode. For API-key-only access: `chainstream config set --key apiKey --value <key>`.
+**MUST run `chainstream login` before any CLI command.** This creates a wallet (no email required) and **auto-grants a nano trial plan** ($1, 50K CU, 30 days). Without it, commands fail with "Not authenticated". Email login (`login --email`) **auto-upgrades to micro trial plan** ($5, 350K CU, 30 days); `bind-email` alone only enables recovery, no upgrade. Before data queries, check subscription: `npx @chainstream-io/cli plan status`. If no subscription or need a higher plan, show plans (`wallet pricing`) and let user choose — CLI purchase is interactive and will NOT work in pipe mode. For API-key-only access: `chainstream config set --key apiKey --value <key>`.
 
 ## Hard Rules
 

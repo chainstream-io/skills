@@ -41,6 +41,8 @@ What happens under the hood:
 4. CLI stores the organization ID and wallet addresses in `~/.config/chainstream/config.json`
 5. All API calls use SIWX wallet signature auth; x402 payment uses EIP-3009 signed authorization
 
+> New wallets are automatically granted a **nano trial plan** ($1, 50K CU, 30 days). No manual purchase needed — the plan is activated immediately. See [x402-payment.md](x402-payment.md#trial-plans-free-trial) for details.
+
 ### Session management
 
 ```bash
@@ -52,7 +54,7 @@ npx @chainstream-io/cli logout                    # Clear session (P-256 keys pr
 
 ### Optional: Bind email for recovery
 
-After creating a wallet, you can optionally bind an email for account recovery:
+After creating a wallet, you can optionally bind an email for account recovery. Binding alone does **not** upgrade the trial plan — the upgrade happens on first `login --email`:
 
 ```bash
 # Interactive (TTY terminal):
@@ -68,7 +70,7 @@ npx @chainstream-io/cli bind-email-verify --otp-id <otpId> --code <code> --email
 
 ### Optional: Email OTP login
 
-If you prefer email-based login (e.g., to recover an existing wallet on a new device):
+If you prefer email-based login (e.g., to recover an existing wallet on a new device). **First-time email login auto-upgrades the trial plan to micro** ($5, 350K CU, 30 days; dedup by email). This is the only trigger for the upgrade — `bind-email` alone does not upgrade:
 
 ```bash
 # Interactive (TTY terminal):

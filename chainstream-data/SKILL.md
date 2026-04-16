@@ -33,13 +33,13 @@ On-chain data intelligence for AI agents. Access token analytics, market trends,
 
 **Getting an API Key (required for all paths):**
 - Dashboard users: [app.chainstream.io](https://app.chainstream.io) → API Keys
-- x402 (USDC on Base/Solana): `npx @chainstream-io/cli plan purchase --plan <PLAN> --json` → x402 purchase (real USDC payment via EIP-3009 signature). Run `wallet pricing --json` first, present ALL plans, let user choose
+- x402 (USDC on Base/Solana): `npx @chainstream-io/cli plan purchase --plan <PLAN> --json` → x402 purchase (real USDC payment via EIP-3009 signature). Run `wallet pricing --json` first, present ALL plans, let user choose. Note: new users already have an auto-granted trial plan after login
 - MPP (USDC.e on Tempo): `tempo request "https://api.chainstream.io/mpp/purchase?plan=<PLAN>"` → MPP payment → API Key auto-returned (fetch `/mpp/pricing` first, let user choose plan)
 
 **⚠️ Purchase flow (x402)**:
 1. `plan status --json` — check if subscription already exists
 2. If no subscription: `wallet pricing --json` — present ALL plans, let user choose. **NEVER auto-select a plan.**
-3. `wallet balance --chain base --json` (and/or `--chain sol`) — check where user has USDC
+3. `wallet balance --chain base --json` (and/or `--chain sol`) — check where user has USDC. Also `plan status --json` — if a trial plan is already active, no purchase may be needed
 4. If USDC is on Solana: `config set --key walletChain --value sol` (default is `base`)
 5. `plan purchase --plan <USER_CHOSEN> --json` — x402 purchase (real USDC payment). API Key auto-saved to config
 
