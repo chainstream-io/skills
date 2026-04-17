@@ -27,21 +27,30 @@ On-chain data intelligence for AI agents. Access token analytics, market trends,
 3. **MCP call failed?**
    → Fall back to CLI as backup
 
-**Before any data query, check subscription:** `npx @chainstream-io/cli plan status`
+**Before anything else (CLI path), ensure user is authenticated:**
+1. `npx @chainstream-io/cli config auth` — check login status
+2. If NOT logged in → `npx @chainstream-io/cli login` (creates EVM + Solana wallet, auto-grants **nano trial plan: 50K CU free, 30 days** — no purchase needed)
+3. If logged in → proceed to subscription check below
+
+**New users get a free trial on login (50K CU).** For details on trial plans and upgrade options, see [`shared/authentication.md`](../shared/authentication.md#agent-bootstrap-checklist).
+
+**Then check subscription:** `npx @chainstream-io/cli plan status`
 - If `active: true` → proceed with data queries
 - If no subscription → follow the purchase flow below (NEVER just run a data command hoping it "auto-purchases")
 
 **Getting an API Key (required for all paths):**
 - Dashboard users: [app.chainstream.io](https://app.chainstream.io) → API Keys
-- x402 (USDC on Base/Solana): `npx @chainstream-io/cli plan purchase --plan <PLAN> --json` → x402 purchase (real USDC payment via EIP-3009 signature). Run `wallet pricing --json` first, present ALL plans, let user choose. Note: new users already have an auto-granted trial plan after login
+- x402 (USDC on Base/Solana): `npx @chainstream-io/cli plan purchase --plan <PLAN> --json` → x402 purchase (real USDC payment via EIP-3009 signature). Run `wallet pricing --json` first, present ALL plans, let user choose
 - MPP (USDC.e on Tempo): `tempo request "https://api.chainstream.io/mpp/purchase?plan=<PLAN>"` → MPP payment → API Key auto-returned (fetch `/mpp/pricing` first, let user choose plan)
 
 **⚠️ Purchase flow (x402)**:
-1. `plan status --json` — check if subscription already exists
-2. If no subscription: `wallet pricing --json` — present ALL plans, let user choose. **NEVER auto-select a plan.**
-3. `wallet balance --chain base --json` (and/or `--chain sol`) — check where user has USDC. Also `plan status --json` — if a trial plan is already active, no purchase may be needed
-4. If USDC is on Solana: `config set --key walletChain --value sol` (default is `base`)
-5. `plan purchase --plan <USER_CHOSEN> --json` — x402 purchase (real USDC payment). API Key auto-saved to config
+0. `config auth` — ensure user is logged in. If not: `login` first (auto-grants nano trial — may be sufficient, check `plan status` before proceeding to purchase)
+1. `plan status --json` — check if subscription already exists (login auto-grants nano trial, so new users likely already have one)
+2. If `active: true` and quota sufficient → no purchase needed, proceed with data queries
+3. If no subscription or quota exhausted: `wallet pricing --json` — present ALL plans, let user choose. **NEVER auto-select a plan.**
+4. `wallet balance --chain base --json` (and/or `--chain sol`) — check where user has USDC
+5. If USDC is on Solana: `config set --key walletChain --value sol` (default is `base`)
+6. `plan purchase --plan <USER_CHOSEN> --json` — x402 purchase (real USDC payment). API Key auto-saved to config
 
 **⚠️ Quota is CU, NOT call count**: Plan quota is measured in **Compute Units (CU)**, not API call count. Each API endpoint costs a different amount of CU per call (varies by endpoint complexity and response size). When presenting plans to the user, always use "CU" as the unit — NEVER say "calls" or "requests".
 
@@ -189,20 +198,20 @@ npx @chainstream-io/cli wallet profile → npx @chainstream-io/cli wallet activi
 - NEVER batch more than 50 addresses in `/multi` endpoints — API hard limit
 - NEVER use public RPC or third-party data providers as substitutes — results differ and miss ChainStream-specific enrichments (security scores, smart money tags)
 - NEVER omit `--limit` on list queries — CLI defaults to 5 results to prevent context overflow. If the user needs more, pass `--limit <n>` explicitly (e.g. `--limit 20`)
-- NEVER run data commands (token/market/wallet) without checking subscription first — if no subscription exists, data commands will fail with 402. Run `plan status` first, then `plan purchase --plan <name>` if needed
+- NEVER run data commands (token/market/wallet) without ensuring user is logged in and has an active subscription — run `config auth` → `login` (if needed) → `plan status` first. New users get a free nano trial on login; only run `plan purchase` if the trial is exhausted or absent
 
 ## Error Recovery
 
 | Error | Meaning | Recovery |
 |-------|---------|----------|
-| "Not authenticated" / 401 / 402 | No API Key or no active subscription | First run `npx @chainstream-io/cli plan status` to check. Quick fix: `npx @chainstream-io/cli config set --key apiKey --value <key>`. No key? **MANDATORY — READ** [`shared/authentication.md`](../shared/authentication.md) for purchase flow |
+| "Not authenticated" / 401 / 402 | Not logged in, no API Key, or no active subscription | Follow the 401/402 sequence below |
 | 429 | Rate limit | Wait 1s, exponential backoff |
 | 5xx | Server error | Retry once after 2s |
 
 On 401/402, follow this exact sequence:
-1. **Check subscription**: `npx @chainstream-io/cli plan status`
-2. **If `active: true`**: subscription exists but API Key missing from config → ask user for their API Key, then `config set --key apiKey --value <key>`
-3. **If no subscription**: ask the user "Do you have a ChainStream API Key?" — if yes, set it and retry; if no, run `npx @chainstream-io/cli wallet pricing`, **present ALL plans to the user**, let them choose, then load [`shared/x402-payment.md`](../shared/x402-payment.md) for the purchase flow. **NEVER auto-select a plan. NEVER try to pipe input to interactive CLI prompts.**
+1. **Check login**: `npx @chainstream-io/cli config auth` — if not logged in, run `npx @chainstream-io/cli login` (creates wallet + auto-grants nano trial with 50K CU free). After login, retry the failed command — it will likely succeed now
+2. **Check subscription**: `npx @chainstream-io/cli plan status` — if `active: true` with remaining quota, the issue is likely a transient auth error; retry
+3. **If logged in but no subscription**: ask the user "Do you have a ChainStream API Key?" — if yes, `config set --key apiKey --value <key>` and retry; if no, run `npx @chainstream-io/cli wallet pricing`, **present ALL plans to the user**, let them choose, then load [`shared/x402-payment.md`](../shared/x402-payment.md) for the purchase flow. **NEVER auto-select a plan. NEVER try to pipe input to interactive CLI prompts.**
 
 ## Skill Map
 

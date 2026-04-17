@@ -24,6 +24,13 @@ Execute DeFi operations: token swap, launchpad creation, transaction signing, an
 
 DeFi operations **require a wallet**. API Key alone is insufficient.
 
+**Before anything else (CLI path), ensure user is authenticated:**
+1. `npx @chainstream-io/cli config auth` — check login status
+2. If NOT logged in → `npx @chainstream-io/cli login` (creates EVM + Solana wallet, auto-grants **nano trial plan: 50K CU free, 30 days** — no purchase needed)
+3. `npx @chainstream-io/cli plan status` — verify subscription is active
+
+**New users get a free trial on login (50K CU).** For details on trial plans and upgrade options, see [`shared/authentication.md`](../shared/authentication.md#agent-bootstrap-checklist).
+
 **Environment-aware decision (pick the path that matches how the agent runs):**
 
 1. **Agent already has a wallet (`WalletSigner`)?**
@@ -204,7 +211,7 @@ For the full resolution table, see [references/currency-resolution.md](reference
 | Insufficient balance | Not enough funds | Show balance, suggest amount |
 | Job timeout | No confirmation in 60s | Show pending status + tx hash for manual check |
 | Stale transaction / expired blockhash / nonce too old | Transaction built too long ago | Rebuild from Step 1 (`dex route`), get fresh unsigned tx, re-confirm with user |
-| 402 | No quota (CU) | Check `plan status` first. If no subscription: `wallet pricing` to show plans, let user choose, then `plan purchase --plan <name>`. See [shared/x402-payment.md](../shared/x402-payment.md) |
+| 402 | No quota (CU) | First `config auth` → `login` if not logged in (auto-grants nano trial 50K CU). Then `plan status` — if trial active, retry. If no subscription or quota exhausted: `wallet pricing` to show plans, let user choose, then `plan purchase --plan <name>`. See [shared/x402-payment.md](../shared/x402-payment.md) |
 
 ## Rules
 

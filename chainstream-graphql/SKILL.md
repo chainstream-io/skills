@@ -30,9 +30,16 @@ Flexible GraphQL interface to ChainStream's on-chain data warehouse. 27 cubes or
 
 ## Integration Path
 
+**Before anything else (CLI path), ensure user is authenticated:**
+1. `npx @chainstream-io/cli config auth` — check login status
+2. If NOT logged in → `npx @chainstream-io/cli login` (creates EVM + Solana wallet, auto-grants **nano trial plan: 50K CU free, 30 days** — no purchase needed)
+3. `npx @chainstream-io/cli plan status` — verify subscription is active
+
+**New users get a free trial on login (50K CU).** For details on trial plans and upgrade options, see [`shared/authentication.md`](../shared/authentication.md#agent-bootstrap-checklist).
+
 1. **Has API Key?**
    → YES → Use CLI directly: `npx @chainstream-io/cli graphql query --query '...'`
-   → NO → CLI auto-handles on first 402 (see Payment section below)
+   → NO → Ensure logged in (see above), then CLI auto-handles on first 402
 
 2. **First time / unsure about schema?**
    → Run `npx @chainstream-io/cli graphql schema --summary` to discover available cubes
@@ -184,13 +191,16 @@ query {
 
 | Error | Meaning | Recovery |
 |-------|---------|----------|
-| 401 / "Not authenticated" | No API Key configured | `npx @chainstream-io/cli config set --key apiKey --value <key>` |
-| 402 | No active subscription | CLI auto-handles: plan selection → x402/MPP payment → retry. **MANDATORY — READ** [`shared/x402-payment.md`](../shared/x402-payment.md) for manual purchase flow |
+| 401 / "Not authenticated" | Not logged in or no API Key | First `config auth` → `login` if not logged in (auto-grants nano trial 50K CU) → retry. If still failing: `config set --key apiKey --value <key>` |
+| 402 | No active subscription | First `config auth` → `login` if needed (trial may suffice) → `plan status`. If no subscription or quota exhausted: `wallet pricing` then `plan purchase`. **MANDATORY — READ** [`shared/x402-payment.md`](../shared/x402-payment.md) for manual purchase flow |
 | "GraphQL error: ..." | Invalid query syntax or non-existent field | Check field names against `graphql schema --type <cube>` |
 | 429 | Rate limit | Wait 1s, exponential backoff |
 | 5xx | Server error | Retry once after 2s |
 
-On 401/402: ask the user "Do you have a ChainStream API Key?" — if yes, set it; if no, load [`shared/x402-payment.md`](../shared/x402-payment.md) for the full purchase flow. GraphQL shares the same API Key / subscription pool as the REST API — no separate purchase needed.
+On 401/402, follow this sequence:
+1. **Check login**: `npx @chainstream-io/cli config auth` — if not logged in, run `login` (creates wallet + auto-grants nano trial with 50K CU free). After login, retry the failed command — it will likely succeed now
+2. **Check subscription**: `npx @chainstream-io/cli plan status` — if `active: true` with remaining quota, retry
+3. **If logged in but no subscription**: ask the user "Do you have a ChainStream API Key?" — if yes, `config set --key apiKey --value <key>` and retry; if no, load [`shared/x402-payment.md`](../shared/x402-payment.md) for the purchase flow. GraphQL shares the same API Key / subscription pool as the REST API — no separate purchase needed.
 
 ## Skill Map
 
