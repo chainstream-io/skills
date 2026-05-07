@@ -374,7 +374,7 @@ query {
 | WRONG | CORRECT | Note |
 |-------|---------|------|
 | `CubeName(network: sol)` | `Solana { CubeName(...) }` | Must use chain group wrapper |
-| `network: sol` on cube | `EVM(network: eth)` on wrapper | network is a wrapper-level param, only on EVM |
+| `network: sol` on cube | `EVM(network: eth)` or `Solana(network: solana)` on wrapper | network is a wrapper-level param on EVM (required) and Solana (optional, defaults to `solana`) |
 | `orderBy: Block_Time_DESC` | `orderBy: {descending: Block_Time}` | orderBy is an InputObject, not an enum |
 | `Block: {Time: {gt: "..."}}` | `Block: {Time: {since: "..."}}` | DateTimeFilter, not IntFilter |
 | `"2026-03-31T00:00:00Z"` | `"2026-03-31 00:00:00"` | ClickHouse format, no T/Z |
